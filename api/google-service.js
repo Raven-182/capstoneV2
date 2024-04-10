@@ -6,7 +6,7 @@ const { SpacesServiceClient } = require('@google-apps/meet').v2;
 const { ConferenceRecordsServiceClient } = require('@google-apps/meet').v2;
 const { auth } = require('google-auth-library');
 const axios = require('axios');
-const SCOPES = ['https://www.googleapis.com/auth/meetings.space.created'];
+const SCOPES = ['https://www.googleapis.com/auth/meetings.space.readonly'];
 const TOKEN_PATH = path.join(process.cwd(), 'token.json');
 const CREDENTIALS_PATH = path.join(process.cwd(), 'credentials.json');
 
@@ -66,30 +66,29 @@ class GoogleService {
 
   async getAllListConferenceRecords(authClient) {
     const meetClient = new ConferenceRecordsServiceClient({
-        authClient: authClient
-      });
+      authClient: authClient
+    });
 
     // Construct request
     const request = {
-      
+
     };
 
     // Run request
     const iterable = meetClient.listConferenceRecordsAsync(request);
     var allResponses = []
     for await (const response of iterable) {
-      console.log("found something");
-      console.log(response);
-      allResponses.push(response); 
+      //console.log(response);
+      allResponses.push(response);
     }
     return allResponses
   }
 
   async getAllTranscriptsForConf(authClient, parent) {
     const meetClient = new ConferenceRecordsServiceClient({
-        authClient: authClient
-      });
-  
+      authClient: authClient
+    });
+
     // Construct request
     const request = {
       parent,
@@ -97,49 +96,79 @@ class GoogleService {
 
     // Run request
     const iterable = meetClient.listTranscriptsAsync(request);
-    console.log("Transcript responses: ");
     var allResponses = []
     for await (const response of iterable) {
-      
-      console.log(response);
-      allResponses += response
+
+      //console.log(response);
+      allResponses.push(response);
     }
     return allResponses
   }
 
 
+  /**
+   * list transcripts
+   */
+  async callListTranscriptEntries(authClient, parent) {
+    const meetClient = new ConferenceRecordsServiceClient({
+      authClient: authClient
+    });
+    // Construct request
+    const request = {
+      parent,
+    };
+
+    // Run request
+    const iterable = meetClient.listTranscriptEntriesAsync(request);
+    var allResponses = []
+    for await (const response of iterable) {
+      console.log(response);
+      // Construct request
+      const name = response.participant
+      const request = {
+        name,
+      };
+
+      // Run request
+      let displayName = "Not Signed In";
+      const participantResponseArray = await meetClient.getParticipant(request);
+      if (participantResponseArray && participantResponseArray[0]) {
+        const participantResponse = participantResponseArray[0];
+        displayName = participantResponse.signedinUser.displayName;
+
+      }
+      //const displayName = participant.signedinUser.displayName;
+      allResponses.push({
+        ...response,
+        participantDisplayName: displayName,
+    });
+    }
+    return allResponses;
+  }
+
 
   /**
-   * test
+   * participant info
    */
 
- 
-/**
- * getting a specific transcript: aeq-zeqo-wht
- * 
- */
 
-  // async callGetConferenceRecord(authClient) {
+  async callGetParticipant(authClient, name) {
+    const meetClient = new ConferenceRecordsServiceClient({
+      authClient: authClient
+    });
+    // Construct request
+    const request = {
+      name,
+    };
 
-  //   const meetClient = new ConferenceRecordsServiceClient({
-  //     authClient: authClient
-  //   });
-  //   // Construct request
-  //   const name = 'aeq-zeqo-wht'
-  //   const request = {
-  //     name,
-  //   };
-
-  //   // Run request
-  //   const response = await meetClient.getConferenceRecord(request);
-  //   console.log(response);
-  // }
-
-
-/**
- * 
- * Get info about the space
- */
+    // Run request
+    const response = await meetClient.getParticipant(request);
+    console.log(response);
+  }
+  /**
+   * 
+   * Get info about the space
+   */
 
 
   async callGetSpace(authClient) {
@@ -157,7 +186,7 @@ class GoogleService {
     // Run request
     const response = await meetClient.getSpace(request);
     console.log(response);
-  
+
   }
 
   /**
