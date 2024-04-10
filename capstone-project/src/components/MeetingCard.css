@@ -1,0 +1,68 @@
+.meeting-card {
+    position: relative;
+    width: 280px; /* Fixed width */
+    height: 300px; /* Fixed height */
+    perspective: 1000px; /* Define perspective for 3D effect */
+    border-radius: 10px;
+    overflow: hidden;
+    margin-right: 60px;
+    margin-bottom: 50px; /* Add margin to create space between cards */
+}
+
+.meeting-card-image {
+    width: 100%; /* Ensure image fills its container */
+    height: 100%; /* Ensure image fills its container */
+    object-fit: cover; /* Maintain aspect ratio and cover the container */
+    transition: transform 0.5s ease; /* Add transition for smooth hover effect */
+}
+
+.meeting-card-content {
+    position: absolute;
+    bottom: 0;
+    font-size: 14px;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    transform-origin: bottom; /* Set origin for 3D transformation */
+    transform: rotateX(90deg); /* Initial flip to hide content */
+    transition: transform 0.5s ease; /* Add transition for smooth hover effect */
+}
+
+.meeting-card:hover .meeting-card-image {
+    transform: scale(1.1); /* Scale up on hover for zoom effect */
+}
+
+.meetings-container{
+    margin-top: 90px;
+    display: flex;
+    margin-left: 125px;
+    flex-wrap: wrap; /* Allow flex items to wrap */
+
+}
+
+.meeting-card:hover .meeting-card-content {
+    transform: rotateX(0deg); /* Flip back to show content on hover */
+}
+
+.meeting-card-name {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.meeting-card-link {
+    display: inline-block;
+    padding: 10px 20px;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    background-color: transparent;
+    color: #fff;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.meeting-card-link:hover {
+    background-color: white;
+    color: black;
+}

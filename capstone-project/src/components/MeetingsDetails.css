@@ -1,0 +1,13 @@
+.meetings-details {
+    background-image: linear-gradient(rgba(1, 27, 25, 0.76), rgba(0, 0, 0, 0.829)), url('/images/MeetingBG.jpeg');
+    background-position: center;
+    background-size: cover;
+    height: 100%;
+    color: white;
+    font-size: 44px;
+    display: flex;
+    flex-wrap: wrap; /* Allow flex items to wrap */
+    align-items: flex-start; /* Align items to the start of the flex container */
+    padding: 20px; /* Add padding to create space around the cards */
+    box-sizing: border-box; /* Include padding in the height calculation */
+  }

@@ -1,0 +1,98 @@
+.meeting-summary {
+    border-radius: 10px;
+    padding: 20px; /* Increased padding */
+    padding-top: 10px;
+    margin-bottom: 20px;
+    background: linear-gradient(to bottom, #ffffff, #f0f0f0); /* Gradient background */
+    color: #000; /* Set font color to black */
+    width: 94%; 
+    margin: 0 auto; /* Center the summary container horizontally */
+    padding-bottom: 40px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Added box shadow */
+  }
+
+  
+  .tab-buttons {
+    margin-bottom: 30px;
+  }
+
+  .meeting-summary h4{
+    font-size: 24px;
+    font-family: 'Times New Roman', Times, serif;
+    color: #333;
+    margin-top: 20px;
+  }
+  .tab-buttons button {
+    background-color: white;
+    border: none;
+    color: #333;
+    padding: 10px 20px;
+    margin-right: 12px;
+    font-size: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    transform-style: preserve-3d; /* Ensures child elements maintain their 3D position */
+    perspective: 1000px; /* Adds perspective to the element */
+  }
+
+  a{
+    text-decoration: none;
+  }
+  
+  .tab-buttons button:hover {
+    background-color: #f9f9f9;
+    transform: rotateX(10deg) translateY(-5px); /* Apply rotation and translation */
+  }
+  
+  .tab-buttons button.active {
+    background-color: #38428b;
+    color: white;
+  }  
+  
+  
+  .tab-content {
+    border-radius: 5px;
+    padding: 20px; /* Increased padding */
+    background: white;
+    height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Added box shadow */
+    font-size: 28px;
+  }
+  
+  .tab {
+    display: none;
+    padding: 10px;
+  }
+  
+  .tab.active {
+    display: block;
+  }
+  
+  /* Updated list styles */
+  .tab-content ul {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    list-style-type: none;
+  }
+  
+  .tab-content ul li {
+    margin-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+    line-height: 1.5; /* Improved line height for better readability */
+  }
+  
+  .tab-content ul li:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 6px;
+    width: 8px;
+    height: 8px;
+    background-color: #555; /* Dark circle bullet */
+    border-radius: 50%;
+  }
+  
