@@ -1,1 +1,3 @@
 api/token.json
+api/node_modules
+client/node_modules

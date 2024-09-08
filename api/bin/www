@@ -1,11 +1,15 @@
 #!/usr/bin/env node
 
+/* setup file for express server */
 /**
  * Module dependencies.
  */
 
+//creates the express app from app.js
 var app = require('../app');
+// for logging debug messages
 var debug = require('debug')('api:server');
+// creates an http server 
 var http = require('http');
 
 /**
@@ -16,7 +20,7 @@ var port = normalizePort(process.env.PORT || '9000');
 app.set('port', port);
 
 /**
- * Create HTTP server.
+ * Create HTTP server as the request handler.
  */
 
 var server = http.createServer(app);
