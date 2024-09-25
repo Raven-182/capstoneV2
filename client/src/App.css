@@ -26,12 +26,6 @@
   background-size: cover;
 }
 
-.journals {
-  background-image: url('/images/journal.jpg');
-  background-position: center;
-  background-size: cover;
-}
-
 .meetings {
   background-image: linear-gradient(rgba(1, 27, 25, 0.76), rgba(0, 0, 0, 0.829)), url('/images/MeetingBG.jpeg');
   background-position: center;
