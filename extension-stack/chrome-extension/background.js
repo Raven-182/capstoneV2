@@ -19,6 +19,11 @@ let audioData;
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "AudioData") {
         audioData = message.audio;
-        console.log("Audio data stored in background:", audioData);
+         console.log("Audio data stored in background:", audioData);
     }
 });
+
+
+   // Send the audio data to the popup.html
+
+
