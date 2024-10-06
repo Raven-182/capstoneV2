@@ -15,13 +15,27 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   });
   
 let audioData;
-
+let apiUrl = 'http://localhost:9000/api/azurestt';
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "AudioData") {
         audioData = message.audio;
-         console.log("Audio data stored in background:", audioData);
+        console.log("Audio data stored in background, sending to api:", audioData);
+        fetch(apiUrl, {
+            method: 'POST',
+            cache: 'no-cache',
+            body: audioData
+          })
+          .then(response => response.text())
+          .then(data => {
+            console.log(data); 
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+         
     }
 });
+
 
 
    // Send the audio data to the popup.html
