@@ -59,7 +59,11 @@ function Navbar() {
                                 Journal
                             </Link>
                         </li>
-
+                        <li className='nav-item'>
+                          <Link to='/moodsurvey' className='nav-links' onClick={closeMobileMenu}>
+                               Mood Survey
+                            </Link>
+                        </li>
 
                     </ul>
                     {button && <Button buttonStyle='btn--outline'>Sign up</Button>}

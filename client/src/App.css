@@ -37,3 +37,14 @@
   padding: 20px; /* Add padding to create space around the cards */
   box-sizing: border-box; /* Include padding in the height calculation */
 }
+/* New mood survey section styling */
+.mood-survey {
+  background-image: url('/public/images/mood_survey_background.jpg'); /* Change to your desired background image */
+  background-position: center;
+  background-size: cover; /* Ensure it covers the entire section */
+  height: 100%; /* Ensure full height */
+  display: flex;
+  flex-direction: column; /* Allow for column layout if needed */
+  justify-content: center; /* Center the content vertically */
+  align-items: center; /* Center the content horizontally */
+}
