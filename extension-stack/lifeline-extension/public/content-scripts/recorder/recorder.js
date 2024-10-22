@@ -11,7 +11,7 @@ let micGainNode; // to control the mute state
 const gladiaUrl = "wss://api.gladia.io/audio/text/audio-transcription";
 async function initializeGladiaProcessing() {
     const configMessage = {
-        x_gladia_key: "47f86a54-1e8d-4ab4-aca4-e975a8c00728", 
+        x_gladia_key: "", 
         frames_format: 'bytes',
         language_behaviour: "automatic single language",
         sample_rate: samplingRate,
