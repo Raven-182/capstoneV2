@@ -7,10 +7,11 @@ let displayStream;
 let micStream;
 let isRecording = false;
 let socket;
+let micGainNode; // to control the mute state 
 const gladiaUrl = "wss://api.gladia.io/audio/text/audio-transcription";
 async function initializeGladiaProcessing() {
     const configMessage = {
-        x_gladia_key: "", 
+        x_gladia_key: "47f86a54-1e8d-4ab4-aca4-e975a8c00728", 
         frames_format: 'bytes',
         language_behaviour: "automatic single language",
         sample_rate: samplingRate,
@@ -51,6 +52,16 @@ chrome.runtime.onMessage.addListener(async function (request, sender, sendRespon
     console.log("Received stop transcription request", request);
     stopRecording();
     isRecording = false; // Reset the flag
+  }
+  else if (request.action === "MuteChange") {
+    // Mute or unmute the microphone
+    if (request.mute) {
+      console.log("Muting microphone...");
+      micGainNode.gain.setValueAtTime(0, audioContext.currentTime); // Set volume to 0
+    } else {
+      console.log("Unmuting microphone...");
+      micGainNode.gain.setValueAtTime(1, audioContext.currentTime); // Restore volume to 1
+    }
   }
 });
 
@@ -166,15 +177,22 @@ const startRecording = async () => {
       audioContext.createMediaStreamSource(displayStream);
     // Outgoing audio stream 
     let micAudioSource = audioContext.createMediaStreamSource(micStream);
-    
+     // Create a GainNode to control the volume of the microphone audio
+     micGainNode = audioContext.createGain();
+     micGainNode.gain.setValueAtTime(1, audioContext.currentTime); // Start with volume at 1
+ 
     // Convert stereo audio to mono for both sources
     let monoDisplaySource = mergeToMono(displayAudioSource);
     let monoMicSource = mergeToMono(micAudioSource);
 
+     // Connect the mic source to the gain node
+     monoMicSource.connect(micGainNode);
+
     // Combine multiple audio streams to one output with two channels
     let channelMerger = audioContext.createChannelMerger(2);
   
-    monoMicSource.connect(channelMerger, 0, 0);
+    // monoMicSource.connect(channelMerger, 0, 0);
+    micGainNode.connect(channelMerger, 0, 0);
     monoDisplaySource.connect(channelMerger, 0, 1);
     
     // Load the AudioWorklet module for custom audio processing

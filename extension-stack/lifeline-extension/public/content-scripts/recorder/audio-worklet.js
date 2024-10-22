@@ -149,7 +149,7 @@ class RecordingProcessor extends AudioWorkletProcessor {
     if (input && input.length > 0) {
       let micBuffer = input[0];
       let displayBuffer = input[1];
-      let pcm;
+      let pcm = null;
      
       if (!this.isSilent(micBuffer)) {
         //send back mic data for transcription if not silent
@@ -158,8 +158,10 @@ class RecordingProcessor extends AudioWorkletProcessor {
         //send back display data for transcription mic data is silent and display is not
         pcm = this.pcmEncode(input[1]);
       }
-      // communicate with the node 
-      this.port.postMessage(pcm);
+          // Only send PCM data if it's not null (one of the buffers had sound)
+      if (pcm) {
+        this.port.postMessage(pcm); // Communicate with the node
+      }
     }
     return true;
   }

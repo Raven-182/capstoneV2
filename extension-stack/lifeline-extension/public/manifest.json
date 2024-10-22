@@ -5,8 +5,8 @@
     "manifest_version": 3,
     "action": {
       "default_title": "Click to open Lifeline Assistant",
-      "default_icon": "icons/icon.png",
-      "default_popup": "popup.html"
+      "default_icon": "icons/icon.png"
+
     },
     "permissions": [
         "storage",
@@ -17,11 +17,11 @@
         "activeTab"
     ],
     "side_panel": {
-        "default_path": "index.html"
+        "default_path": "public/index.html"
       },
-    "background": {
-      "service_worker": "background.js"
-    },
+      "background": {
+        "service_worker": "service-worker.js"
+      },
     "content_scripts": [
     {
       "matches": [
@@ -30,6 +30,17 @@
       "js": [
         "content-scripts/mutation-summary.js",
         "content-scripts/providers/zoom.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://teams.microsoft.com/*"
+      ],
+      "js": [
+        "content-scripts/mutation-summary.js",
+        "content-scripts/providers/teams.js"
       ],
       "all_frames": true,
       "run_at": "document_idle"
@@ -49,6 +60,7 @@
         "content-scripts/recorder/recorder.html",
         "content-scripts/recorder/recorder.js",
         "content-scripts/recorder/audio-worklet.js",
+        "content-scripts/providers/inject-teams.js",
         "content-scripts/providers/inject-zoom.js"
 
       ],
