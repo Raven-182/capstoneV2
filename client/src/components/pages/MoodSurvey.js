@@ -1,22 +1,23 @@
-import React, { useState, useEffect } from 'react';//hooks allow to manage component state and handles updating background
+import React, { useState, useEffect } from 'react';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { auth, db } from '../../firebaseConfig'; // Import Firestore
+import { doc, setDoc } from "firebase/firestore"; // Import Firestore functions
 import '../../App.css';
 import '../../components/moodsurvey.css';
 
-const MoodSurvey = () => {//functional component of moodsurvey(main LOGIC  and UI components for mood survey application)
-
-  //Declares state variables using React’s useState hook
+const MoodSurvey = () => {
   const [dayQuality, setDayQuality] = useState('good');
   const [exerciseTime, setExerciseTime] = useState('no');
   const [mealsCount, setMealsCount] = useState('one');
   const [extraDetails, setExtraDetails] = useState('');
-  const [moodScore, setMoodScore] = useState(null);//moodscore returned from the backend
-  const [suggestions, setSuggestions] = useState('');//suggestions from server (default it will be an empty string)
+  const [moodScore, setMoodScore] = useState(null);
+  const [suggestions, setSuggestions] = useState('');
   const [backgroundColor, setBackgroundColor] = useState('');
-  const [sectionBackgroundColor, setSectionBackgroundColor] = useState('');//background mood change color 
+  const [sectionBackgroundColor, setSectionBackgroundColor] = useState('');
 
-  // Helper function to get mood emoji, takes the mood (positive, neutral, negative) and returns an emoji representing mood, empty string default
+  const user = auth.currentUser; // Get the current signed-in user
+
   const getMoodEmoji = (mood) => {
     const moodEmojis = {
       positive: '🚶‍♂️😊',
@@ -26,7 +27,6 @@ const MoodSurvey = () => {//functional component of moodsurvey(main LOGIC  and U
     return moodEmojis[mood] || '';
   };
 
-  // Function to update background colors based on mood
   const updateBackgroundColors = (mood) => {
     const moodColors = {
       positive: { main: 'rgba(75, 192, 192, 0.8)', section: 'rgba(75, 192, 192, 0.2)' },
@@ -39,7 +39,6 @@ const MoodSurvey = () => {//functional component of moodsurvey(main LOGIC  and U
     setSectionBackgroundColor(colors.section);
   };
 
-  // Function fetchMoodAnalysis function, which sends the user's data to the server for analysis:
   const fetchMoodAnalysis = async (data) => {
     try {
       const response = await fetch('http://localhost:9000/api/survey/analyze', {
@@ -47,44 +46,61 @@ const MoodSurvey = () => {//functional component of moodsurvey(main LOGIC  and U
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-      return await response.json();//converts it back to Javascript object to be displayed in frontend
+      return await response.json();
     } catch (error) {
       console.error('Error analyzing mood:', error);
     }
   };
 
-  
-  // Function to handle mood analysis result which is the result returned from the backend
-  const handleMoodAnalysisResult = (result) => {
-    const { mood, score, suggestions } = result;// result is the response object
+  const handleMoodAnalysisResult = async (result) => {
+    const { mood, score, suggestions } = result;
     alert(`Your mood is: ${mood}`);
     setMoodScore(score);
     setSuggestions(suggestions);
     updateBackgroundColors(mood);
+
+    // Save the mood survey result to Firestore
+    if (user) {
+      const surveyData = {
+        dayQuality,
+        exerciseTime,
+        mealsCount,
+        extraDetails,
+        moodScore: score,
+        suggestions,
+        timestamp: new Date(), // Store the timestamp for when the survey was completed
+      };
+
+      try {
+        // Create a document reference for the current user's mood survey
+        const surveyDocRef = doc(db, "users", user.uid, "moodSurveys", `${new Date().toISOString()}`);
+        await setDoc(surveyDocRef, surveyData);
+        console.log("Mood survey results saved to Firestore:", surveyData);
+      } catch (error) {
+        console.error("Error saving mood survey results:", error);
+      }
+    }
   };
 
-  // Function to handle form submission when clicked on analyse mood in frontend this method is awake
   const handleSubmit = async (e) => {
-    e.preventDefault();//prevents page from refreshing
+    e.preventDefault();
     const data = { description: dayQuality, extraDetails, exerciseTime, mealsCount };
     const result = await fetchMoodAnalysis(data);
     handleMoodAnalysisResult(result);
   };
 
-  // Hook to apply background color on component update
   useEffect(() => {
     if (backgroundColor) {
       document.body.style.backgroundColor = backgroundColor;
     }
     return () => {
-      document.body.style.backgroundColor = ''; // Reset on unmount
+      document.body.style.backgroundColor = '';
     };
   }, [backgroundColor]);
 
-  return (//JSX returned by mood survey component
+  return (
     <div className="survey-page-container">
       <div className="survey-flex-container">
-        {/* Form Section */}
         <FormSection
           dayQuality={dayQuality}
           setDayQuality={setDayQuality}
@@ -96,7 +112,6 @@ const MoodSurvey = () => {//functional component of moodsurvey(main LOGIC  and U
           setExtraDetails={setExtraDetails}
           handleSubmit={handleSubmit}
         />
-        {/* Progress and Suggestions Section */}
         <ProgressSection
           moodScore={moodScore}
           suggestions={suggestions}
@@ -108,7 +123,6 @@ const MoodSurvey = () => {//functional component of moodsurvey(main LOGIC  and U
   );
 };
 
-// Separate Form Section component
 const FormSection = ({
   dayQuality, setDayQuality,
   exerciseTime, setExerciseTime,
@@ -154,7 +168,6 @@ const FormSection = ({
   </div>
 );
 
-// Separate FormGroup component to handle different form inputs
 const FormGroup = ({ label, value, onChange, options }) => (
   <div className="form-group">
     <label className="form-label">{label}</label>
@@ -168,7 +181,6 @@ const FormGroup = ({ label, value, onChange, options }) => (
   </div>
 );
 
-// Separate Progress Section component
 const ProgressSection = ({ moodScore, suggestions, sectionBackgroundColor, getMoodEmoji }) => (
   <div className="progress-suggestions-section" style={{ backgroundColor: sectionBackgroundColor }}>
     {moodScore !== null && (
@@ -200,20 +212,3 @@ const ProgressSection = ({ moodScore, suggestions, sectionBackgroundColor, getMo
 );
 
 export default MoodSurvey;
-
-
-
-/**color change example**/
-/*const mood = 'positive'; // After mood analysis (e.g., positive mood)
-const colors = updateBackgroundColors(mood); // Get color based on mood
-setBackgroundColor(colors.main); // Set the main color
-
-// The useEffect will detect the change in backgroundColor and apply it
-useEffect(() => {
-  if (backgroundColor) {
-    document.body.style.backgroundColor = backgroundColor; // Apply background color
-  }
-  return () => {
-    document.body.style.backgroundColor = ''; // Reset on unmount
-  };
-}, [backgroundColor]); // Dependency on backgroundColor state*/
