@@ -1,22 +1,34 @@
-
-/*global chrome*/
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './App.css';
+
 interface TranscriptEntry {
   speaker: string;
   transcript: string;
   type: string; // "partial" or "final"
 }
+
 function App() {
   const [isRecording, setIsRecording] = useState(false);
   const [activeSpeaker, setActiveSpeaker] = useState(''); 
   const [transcripts, setTranscripts] = useState<TranscriptEntry[]>([]);
+
+  // Reference to the end of the transcript list
+  const transcriptEndRef = useRef<HTMLDivElement | null>(null);
+
+  // Scroll to the bottom div whenever the transcripts update
+  useEffect(() => {
+    if (transcriptEndRef.current) {
+      transcriptEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [transcripts]);
+
   // send a start recording message 
   const handleStartRecording = () => {
     setIsRecording(true);
     console.log('Recording started...');
     chrome.runtime.sendMessage({ action: "StartTranscription" });
   };
+
   // sending a recording stopping message 
   const handleStopRecording = () => {
     setIsRecording(false);
@@ -24,7 +36,14 @@ function App() {
     chrome.runtime.sendMessage({ action: "StopTranscription" });
   };
 
-  // listening for speaker change and transcript messages
+  //sending the meeting data to the main app
+  const sendRecordingToMain = () => {
+    console.log('sending to main');
+    chrome.runtime.sendMessage({ action: "MeetingProcessed" });
+  };
+
+
+  // listening for speaker change, transcript message and the meeting config
   useEffect(() => {
     const handleMessage = (message: any) => {
       if (message.action === "ActiveSpeakerChange" && message.active_speaker) {
@@ -67,30 +86,48 @@ function App() {
             // fallback, should not happen
             return prevTranscripts;
         });
-    }
-    
+      }
     };
+
     chrome.runtime.onMessage.addListener(handleMessage);
     return () => {
       chrome.runtime.onMessage.removeListener(handleMessage);
     };
   }, [activeSpeaker]);
+
   return (
     <div className="card">
-      <h1>Lifeline Meeting Assistant</h1>
+      <h1>Lifeline Meeting Recorder</h1>
       <div>
-        <button onClick={handleStartRecording}>Start Recording</button>
-        <button onClick={handleStopRecording}>Stop Recording</button>
+      <button onClick={handleStartRecording} disabled={isRecording}>Start Recording</button>
+      <button onClick={handleStopRecording} disabled={!isRecording}>Stop Recording</button>
       </div>
       <p>{isRecording ? 'Recording is in progress...' : 'Not recording'}</p>
-      <div className="transcript-log">
-        {transcripts.map((entry, index) => (
-          <p key={index}>
-            <strong>{entry.speaker}:</strong> {entry.transcript} {entry.type == 'partial' && <i>(speaking...)</i>}
-          </p>
-        ))}
-      </div>
+
+      {transcripts.length === 0 ? (
+        <div className="empty-transcript">
+          <img src="/icons/transcription.png" alt="Transcription Icon" className="transcription-icon" />
+          <p>Join a meeting and start recording!</p>
+          <p>Please refresh the window if the recording doesn't begin.</p>
+        </div>
+      ) : (
+        <div className="transcript-container">
+          <div className="transcript-log">
+            {transcripts.map((entry, index) => (
+              <p key={index}>
+                <strong>{entry.speaker}:</strong> {entry.transcript} {entry.type === 'partial' && <i>(speaking...)</i>}
+              </p>
+            ))}
+            {/* Invisible element to scroll to the latest line */}
+            <div ref={transcriptEndRef}></div>
+          </div>
+        </div>
+      )}
+  
+      <button onClick={sendRecordingToMain}>Send Meeting Data to LifeLine</button>
     </div>
   );
+  
 }
+
 export default App;
