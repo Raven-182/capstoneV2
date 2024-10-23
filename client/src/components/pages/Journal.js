@@ -57,7 +57,7 @@ export default function Journal() {
         if (entry) {
             setEditText(entry.content); // Set the text content
             setEditTitle(entry.title);  // Set the title
-            setEditEntry(entry);        // Set the whole entry (if needed for other purposes)
+            setEditEntry(entry);        // Set the whole entry 
             setShowEditTextEntry(true); // Show the edit form
         }
         setTimeout(() => {
@@ -143,16 +143,37 @@ export default function Journal() {
 
                                         <div>
                                             {entry.type === "text" && (
-                                                <button className="entry_edit" onClick={() => handleEdit(entry.id)}>
-                                                    <i className="fa-solid fa-pen-to-square"></i>
-                                                </button>
+                                                <>
+                                                    <button className="entry_edit" onClick={() => handleEdit(entry.id)}>
+                                                        <i className="fa-solid fa-pen-to-square"></i>
+                                                    </button>
+                                                    
+                                                    {/* Text Download Button */}
+                                                    <a 
+                                                        href={`data:text/plain;charset=utf-8,${encodeURIComponent(entry.content)}`} 
+                                                        download={`${entry.title}.txt`}
+                                                    >
+                                                        <button className="entry_download">
+                                                            <i className="fa-solid fa-download"></i>
+                                                        </button>
+                                                    </a>
+                                                </>
                                             )}
 
                                             {entry.type === "audio" && (
-                                                <audio controls className="entry-audio-left">
-                                                    <source src={entry.content} type="audio/mpeg" />
-                                                    Your browser does not support the audio tag.
-                                                </audio>
+                                                <>
+                                                    <audio controls className="entry-audio-left">
+                                                        <source src={entry.content} type="audio/mpeg" />
+                                                        Your browser does not support the audio tag.
+                                                    </audio>
+
+                                                    {/* Audio Download Button */}
+                                                    <a href={entry.content} download={`${entry.title}.mp3`}>
+                                                        <button className="entry_download">
+                                                            <i className="fa-solid fa-download"></i>
+                                                        </button>
+                                                    </a>
+                                                </>
                                             )}
 
                                             &nbsp;&nbsp;&nbsp;&nbsp;
@@ -163,6 +184,7 @@ export default function Journal() {
                                         </div>
                                     </div>
                                 </div>
+
                             ))
                         )}
                     </div>

@@ -64,7 +64,6 @@ const VoiceJournal = ({ onSubmit, onRecordingStart, onRecordingStop }) => {
                 <div>
                     <audio className="audio-player" controls>
                         <source src={audioUrl} type="audio/mpeg" />
-                        Your browser does not support the audio tag.
                     </audio>
                     <button className="save-reco" onClick={handleSave}>Save Entry</button>
                 </div>

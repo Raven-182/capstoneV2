@@ -238,9 +238,26 @@ h1.journals {
     transform: translateY(-2px);
 }
 
+.entry_download:hover{
+    background-color: #938657;
+    transform: translateY(-2px);
+}
+
 .entry_edit{
     background-color:  #317382ba;
-    margin-left: 200px;
+    margin-left: 147px;
+    color: white;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 100%;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.entry_download{
+    background-color:  #93865798;
+    margin-left: 18px;
     color: white;
     border: none;
     padding: 10px 14px;
@@ -365,7 +382,7 @@ h1.journals {
 .entry-audio-left{
     height: 16px;
     width: 150px;
-    margin-left: 90px;
+    margin-left: 40px;
 }
 
 
