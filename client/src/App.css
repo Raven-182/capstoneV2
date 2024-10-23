@@ -20,8 +20,182 @@
 }
 
 /* Styling for specific sections */
+/* Calendar container with light background and a professional look */
+/* Center align the calendar and buttons */
 .calendars {
-  background-image: url('/images/video_conferencing.jpeg');
+  background-color: #f4f4f4 !important; 
+  color: white !important; 
+  min-height: 100vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important; /* Align everything at the top */
+  padding: 20px !important;
+}
+
+/* Button container to keep buttons on one line */
+.button-container {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 10px !important; /* Add spacing between the buttons */
+  margin-bottom: 20px !important; /* Add space below the buttons */
+}
+
+/* Calendar container to fit the page */
+.calendar-container {
+  width: 100% !important;
+  max-width: 1000px !important; /* Set a reasonable max-width for the calendar */
+  margin: 0 auto !important;
+  padding: 10px !important;
+  background-color: white !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 8px !important;
+  border: 1px solid #ddd !important;
+}
+
+/* Calendar styling tweaks to fit */
+.react-calendar {
+  width: 100% !important;
+  max-width: 100% !important; 
+  background-color: white !important;
+  border-radius: 8px !important;
+  padding: 10px !important;
+  box-shadow: none !important;
+}
+
+/* Make weekdays and days smaller to fit */
+.react-calendar__month-view__days {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  grid-auto-rows: 50px !important; /* Smaller height for each day */
+  gap: 1px !important; /* Space between day tiles */
+}
+
+.react-calendar__month-view__weekdays {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  text-align: center !important;
+  font-size: 1rem !important; /* Smaller font size for weekday headings */
+  font-weight: bold !important;
+  color: #666 !important;
+  background-color: #f4f4f4 !important;
+  padding: 5px 0 !important;
+  border-bottom: 1px solid #ddd !important;
+}
+
+/* Day tiles (the individual days in the calendar) */
+.react-calendar__tile {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 50px !important; /* Smaller height for days */
+  width: auto !important;
+  background-color: white !important;
+  color: #333 !important;
+  font-size: 1rem !important; /* Smaller font for day numbers */
+  border: 1px solid transparent !important;
+  transition: background-color 0.3s ease, border 0.3s ease !important;
+}
+
+/* Navigation buttons styling */
+.react-calendar__navigation button {
+  font-size: 1.2rem !important;
+  color: #007bff !important;
+  background: none !important;
+  border: none !important;
+  padding: 5px !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease !important;
+}
+
+/* Adjust hover effect for buttons */
+.react-calendar__navigation button:hover {
+  background-color: #f0f8ff !important;
+  border-radius: 50% !important;
+}
+
+
+/* Event indicator */
+/* Event indicator icon for events */
+.event-indicator {
+  display: inline-block !important;
+  margin-top: 4px !important;
+  width: 14px !important; /* Smaller width for the icon */
+  height: 14px !important; /* Smaller height for the icon */
+  background-color: #007bff !important; /* Blue event marker */
+  border-radius: 50% !important; /* Circular dot to represent events */
+  font-size: 0.8rem !important; /* Smaller font size for the icon */
+  line-height: 1 !important; /* Reduce line height to fit better */
+  color: white !important; /* White color for the calendar icon */
+  text-align: center !important;
+}
+
+/* Create Event form styling */
+.create-event-form {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Space between form elements */
+  font-family: Arial, sans-serif;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px; /* Space between label and input */
+}
+
+.form-group label {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #333;
+}
+
+.form-group input, .form-group textarea {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.form-group input[type="time"] {
+  width: 150px; /* Set a reasonable width for time input */
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px; /* Space between buttons */
+}
+
+.form-buttons button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-buttons button:hover {
+  background-color: #0056b3;
+}
+
+.form-buttons button:last-child {
+  background-color: #6c757d;
+}
+
+.form-buttons button:last-child:hover {
+  background-color: #5a6268;
+}
+
+
+
+
+
+.journals {
+  background-image: url('/images/journal.jpg');
   background-position: center;
   background-size: cover;
 }
