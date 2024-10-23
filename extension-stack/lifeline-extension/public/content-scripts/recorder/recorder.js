@@ -16,7 +16,7 @@ async function initializeGladiaProcessing() {
         language_behaviour: "automatic single language",
         sample_rate: samplingRate,
         encoding: "WAV/PCM",
-        model_type: "accurate",
+        model_type: "fast",
     };
     // Connect to the API WebSocket
     socket = new WebSocket(gladiaUrl);
@@ -29,8 +29,13 @@ async function initializeGladiaProcessing() {
         const message = JSON.parse(event.data);
         console.log(message);
         if (message?.event === 'transcript' && message.transcription) {
+          const transcript = message;
           if (message.type === 'final') {
-            console.log(`Transcription: ${message.transcription}`);
+            console.log(`Transcription: ${transcript.transcription}`);
+            chrome.runtime.sendMessage({ action: "UpdateTranscript", transcript});
+          }
+          else{
+            chrome.runtime.sendMessage({ action: "UpdateTranscript", transcript});
           }
         }
     };
@@ -53,7 +58,7 @@ chrome.runtime.onMessage.addListener(async function (request, sender, sendRespon
     stopRecording();
     isRecording = false; // Reset the flag
   }
-  else if (request.action === "MuteChange") {
+  else if (request.action === "MuteChange" && micGainNode != null) {
     // Mute or unmute the microphone
     if (request.mute) {
       console.log("Muting microphone...");
