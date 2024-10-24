@@ -4,7 +4,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import { auth, db } from '../../firebaseConfig'; // Import Firestore
 import { doc, setDoc } from "firebase/firestore"; // Import Firestore functions
 import '../../App.css';
-import '../../components/moodsurvey.css';
+import '../moodsurvey.css';
 
 const MoodSurvey = () => {
   const [dayQuality, setDayQuality] = useState('good');

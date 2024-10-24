@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { auth, db } from '../../firebaseConfig'; // Adjust the path to firebaseConfig
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
-import '../../App.css';
+import '../signup.css';
 
 export default function SignUpSignIn() {
     const [isSignUp, setIsSignUp] = useState(true); // Track whether to show sign-up or sign-in form
@@ -11,6 +11,7 @@ export default function SignUpSignIn() {
         password: ""
     });
     const [userEmail, setUserEmail] = useState(null); // State to hold the signed-in user's email
+    const [errorMessage, setErrorMessage] = useState(""); // State to hold error messages
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -18,10 +19,12 @@ export default function SignUpSignIn() {
             ...formData,
             [name]: value,
         });
+        setErrorMessage(""); // Clear the error message on input change
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setErrorMessage(""); // Clear previous error messages
         try {
             if (isSignUp) {
                 // Sign up the user
@@ -59,7 +62,13 @@ export default function SignUpSignIn() {
             setFormData({ email: "", password: "" }); // Reset form data
 
         } catch (error) {
-            console.error("Error:", error);
+            if (error.code === "auth/user-not-found") {
+                setErrorMessage("No account found with this email. Please sign up.");
+            } else if (error.code === "auth/wrong-password") {
+                setErrorMessage("Incorrect password. Please try again.");
+            } else {
+                setErrorMessage("Error: " + error.message);
+            }
         }
     };
 
@@ -114,6 +123,8 @@ export default function SignUpSignIn() {
                                 required
                             />
                         </div>
+
+                        {errorMessage && <p className="error-message">{errorMessage}</p>} {/* Display error message */}
 
                         <button type="submit" className="sign-up-btn">
                             {isSignUp ? "Sign Up" : "Sign In"}

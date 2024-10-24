@@ -1,101 +1,128 @@
-/* Styles for the SignUpSignIn page */
+/* Global body styling for dark theme */
 body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f7f8fc;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    background-color: #121212; /* Dark background for the entire page */
+    color: #ffffff; /* White text for better contrast */
+    font-family: Arial, sans-serif; /* Set a default font */
+    margin: 0; /* Remove default margin */
+    padding: 20px; /* Add some padding around the body */
 }
 
+/* Container for the sign-up/sign-in page */
 .sign-up-container {
-    width: 100%;
-    max-width: 400px;
-    margin: 20px auto;
-    background-color: #ffffff;
-    padding: 20px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-}
-
-.sign-up-title {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #333;
-}
-
-.sign-up-form {
+    width: 90%;
+    max-width: 500px; /* Increased max width for a bigger form */
+    margin: 40px auto; /* Increased margin for better spacing */
+    padding: 40px; /* Increased padding for a more spacious feel */
+    background-color: #1e1e1e; /* Dark background for the form */
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #555;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-    color: #333;
-}
-
-.sign-up-btn {
-    width: 100%;
-    padding: 12px;
-    background-color: #4CAF50;
-    color: white;
-    font-size: 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-.sign-up-btn:hover {
-    background-color: #45a049;
-}
-
-.toggle-form {
+/* Heading styling */
+.sign-up-title {
     text-align: center;
-    margin-top: 20px;
+    font-size: 2.5rem; /* Increased font size for better visibility */
+    color: #ffffff; /* White text for contrast */
+    margin-bottom: 30px; /* Increased margin for better spacing */
+}
+
+/* Form styling */
+.sign-up-form {
+    width: 100%;
+}
+
+.sign-up-form .form-group {
+    margin-bottom: 20px; /* Increased margin for better spacing */
+}
+
+.sign-up-form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 1rem; /* Increased font size for better visibility */
+    color: #ffffff; /* White text for contrast */
+}
+
+.sign-up-form input {
+    width: 100%;
+    padding: 12px; /* Increased padding for larger input */
+    border: 1px solid #ccc; /* Light border for input fields */
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: #2a2a2a; /* Dark input background */
+    color: #ffffff; /* White text */
+}
+
+.sign-up-form input::placeholder {
+    color: #bbb; /* Placeholder text color */
+}
+
+/* Button styling */
+.sign-up-btn, .sign-out-btn {
+    width: 100%;
+    padding: 12px; /* Increased padding for larger buttons */
+    background-color: #007bff; /* Button background color */
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px; /* Increased margin for better spacing */
+    transition: background-color 0.3s ease; /* Smooth transition on hover */
+}
+
+.sign-up-btn:hover, .sign-out-btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Toggle between sign-up and sign-in */
+.toggle-form {
+    margin-top: 20px; /* Increased margin for better spacing */
 }
 
 .toggle-btn {
     background: none;
     border: none;
-    color: #007BFF;
-    font-size: 14px;
+    color: #007bff; /* Button color */
     cursor: pointer;
+    font-weight: bold;
     text-decoration: underline;
 }
 
 .toggle-btn:hover {
-    color: #0056b3;
+    color: #0056b3; /* Darker blue on hover */
 }
 
-.sign-out-btn {
-    background-color: #ff4b5c;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
+/* Display signed-in user's email */
+.user-email-display {
+    text-align: center;
+    color: #ffffff; /* White text for contrast */
+    font-size: 1rem;
+    margin-top: 15px; /* Increased margin for better spacing */
 }
 
-.sign-out-btn:hover {
-    background-color: #d43f4b;
+/* Responsive styling */
+@media (max-width: 768px) {
+    .sign-up-title {
+        font-size: 2rem; /* Adjusted for smaller screens */
+    }
+
+    .sign-up-form input {
+        font-size: 0.9rem; /* Adjusted for smaller screens */
+    }
+
+    .sign-up-btn, .sign-out-btn {
+        font-size: 0.9rem; /* Adjusted for smaller screens */
+    }
 }
+.error-message {
+    color: #ff0000; /* Red color for error messages */
+    font-weight: bold;
+    margin-top: 10px; /* Space above the error message */
+    text-align: center; /* Center the message */
+}
+
