@@ -4,3 +4,5 @@ client/node_modules
 node_modules
 # Ignore .env file
 .env
+.DS_Store
+api/.DS_Store
