@@ -31,9 +31,20 @@ body {
 
 .card h1 {
   font-size: 1.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
+.secondary-button{
+  background-color: #29B4AA;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+}
 .card button {
   background-color: #29B4AA;
   color: #ffffff;
@@ -76,7 +87,7 @@ button:disabled {
   padding: 1rem;
   height: 60%; 
   overflow-y: auto; 
-  margin-bottom: 1.5rem; 
+  margin-bottom: 1rem; 
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
 }
 
@@ -84,7 +95,50 @@ button:disabled {
   margin: 0.5rem 0;
   text-align: left;
 }
+.logout-button-container {
+  position: absolute; 
+  top: 78px; 
+  right: 10px; 
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; 
+}
 
+
+.logout-button {
+  width: 25px; 
+  height: 25px;
+  transition: transform 0.2s; 
+}
+
+.logout-button:hover {
+  transform: scale(1.1);
+}
+
+
+.logout-button-container:hover .logout-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+.logout-tooltip {
+  visibility: hidden;
+  opacity: 0;
+  background-color: black;
+  color: white;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  top: -30px; 
+  right: 0;
+  z-index: 1001;
+  transition: opacity 0.3s; 
+  font-size: 12px;
+}
 
 
 @media (max-width: 768px) {

@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import { signOut } from 'firebase/auth'; 
+import { auth } from '../firebase';
 import './App.css';
 
 interface TranscriptEntry {
@@ -41,7 +43,14 @@ function App() {
     console.log('sending to main');
     chrome.runtime.sendMessage({ action: "MeetingProcessed" });
   };
-
+  const handleLogout = async () => {
+    try {
+      await signOut(auth); // Sign out the user
+      console.log('User logged out successfully');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
 
   // listening for speaker change, transcript message and the meeting config
   useEffect(() => {
@@ -97,6 +106,14 @@ function App() {
 
   return (
     <div className="card">
+            <div className="logout-button-container" onClick={handleLogout}>
+        <img 
+          src="/icons/sign-out.png" 
+          alt="Logout Icon" 
+          className="logout-button" 
+        />
+        <div className="logout-tooltip">Logout</div>
+      </div>
       <h1>Lifeline Meeting Recorder</h1>
       <div>
       <button onClick={handleStartRecording} disabled={isRecording}>Start Recording</button>
@@ -125,6 +142,7 @@ function App() {
       )}
   
       <button onClick={sendRecordingToMain}>Send Meeting Data to LifeLine</button>
+
     </div>
   );
   
