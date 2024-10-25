@@ -1,0 +1,147 @@
+/* Main page container */
+.survey-page-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  min-height: 100vh; /* Full viewport height */
+  background-image: 
+      linear-gradient(to bottom, rgba(0, 7, 14, 0.977), rgba(0, 19, 32, 0.936)), /* Gradient */
+      url('/images/moodsurvey.jpg'); /* Image */
+  background-size: cover; /* Cover the entire area */
+  background-position: center; /* Center the image */
+}
+
+/* Flex container to hold the form and the progress/suggestions side by side */
+.survey-flex-container {
+  display: flex;
+  gap: 30px; /* Space between the form and progress section */
+  width: 100%;
+  max-width: 1200px; /* Center the content with a max width */
+  justify-content: space-between;
+}
+
+/* Form Section */
+.form-section {
+  flex: 1; /* Takes up available space */
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white for contrast */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for form */
+  border-radius: 8px; /* Rounded corners */
+}
+
+/* Form Title */
+.form-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+}
+
+/* Form Group styling */
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* Label Styling */
+.form-label {
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: block;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Input and Select Styling */
+.form-control {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease-in-out;
+}
+
+.form-control:focus {
+  border-color: #00aaff; /* Highlighted border when focused */
+}
+
+/* Description box */
+.description-box {
+  resize: none; /* Prevent resizing */
+  height: 100px; /* Set height for description */
+}
+
+/* Button Styling */
+.submit-button {
+  width: 100%;
+  padding: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(145deg, #1e88e5, #0d47a1); /* Gradient for button */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.submit-button:hover {
+  background: linear-gradient(145deg, #1976D2, #42A5F5); /* Darker gradient on hover */
+}
+
+
+/* Progress and Suggestions Section */
+.progress-suggestions-section {
+  flex: 0.6; /* Takes up less space than the form */
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.9); /* Background color */
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* Progress Container */
+.progress-container {
+  margin-bottom: 20px;
+  color: white;
+}
+
+.progress-container h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color:white;
+}
+
+/* Suggestions Container */
+.suggestions-container {
+  margin-top: 20px;
+  text-align: center;
+  background-color: white;
+}
+
+.suggestions-container h3 {
+  font-size: 20px;
+  color:white;
+}
+
+.suggestions-container p {
+  font-size: 16px;
+  color: #666;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .survey-flex-container {
+    flex-direction: column; /* Stack the form and progress/suggestions on top of each other on small screens */
+  }
+
+  .progress-suggestions-section {
+    margin-top: 20px;
+     /* Add margin between form and suggestions */
+  }
+}

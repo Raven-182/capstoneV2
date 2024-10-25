@@ -14,7 +14,8 @@ function Cards() {
                      </ul>
                      <ul className='cards__items'>  
                         <CardItem src='./images/journal.jpg' text='Record your feelings - Say it or Type it out' label='Voice and Text Journal' path='/journals' />
-                        <CardItem src='./images/mood.jpg' text='Ensure a work life balance using our AI mood check-in' label='Mood Check-In' path='/journals' />
+                        <CardItem src='./images/mood.jpg' text='Ensure a work life balance using our AI mood check-in' label='Mood Check-In' path='/moodsurvey' />
+
 
 
                     </ul>

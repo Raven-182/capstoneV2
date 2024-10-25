@@ -8,7 +8,7 @@ import Calendars from './components/pages/Calendars.js';
 import Journal from './components/pages/Journal.js';
 import SignUp from './components/pages/SignUp.js';
 import MeetingsDetails from './components/pages/MeetingsDetails.js';
-
+import MoodSurvey from './components/pages/MoodSurvey.js';
 function App() {
   return (
     <>
@@ -21,6 +21,7 @@ function App() {
           <Route path="/journals" exact Component={Journal}/>
           <Route path="/sign-up" exact Component={SignUp}/>
           <Route path="/meetingsdetails" exact Component={MeetingsDetails}/>
+          <Route path="/moodsurvey" exact Component={MoodSurvey}/>
         </Routes>
       </Router>
     
