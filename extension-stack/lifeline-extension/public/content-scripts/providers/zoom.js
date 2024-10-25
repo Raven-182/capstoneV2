@@ -3,11 +3,24 @@ console.log("Inside Lifeline Assistant Zoom script");
 let meetingConfig = {};
 
 const extractSpeakerName = function (element) {
+  console.log(`mark 1 ${element.className}`)
   var speakerName = "n/a";
   var nameElement = element.querySelector('.video-avatar__avatar-name');
   if (nameElement) {
     speakerName = nameElement.innerText;
-  } else {
+  } else if (element.className == ".multi-speaker-main-container__video-frame.multi-speaker-main-container__video-frame--active"){
+    let activeSpeakerElement = element.querySelector(".multi-speaker-main-container__video-frame.multi-speaker-main-container__video-frame--active");
+      console.log("mark 1.5")
+      console.log("Active Speaker Element:", activeSpeakerElement);
+    if (activeSpeakerElement){
+      console.log(`mark 2 ${activeSpeakerElement.className}`)
+      let nameElement = activeSpeakerElement.querySelector(".video-avatar__avatar-name");
+      speakerName = nameElement.innerText;
+    }
+
+  }
+
+  else{
     var imageElement = element.querySelector('.video-avatar__avatar-img');
     if (imageElement) {
       speakerName = imageElement.alt;
@@ -54,7 +67,10 @@ var activeSpeakerObserver = new MutationSummary({
   queries: [
     { element: '.speaker-active-container__video-frame' },
     { element: '.speaker-bar-container__video-frame--active' },
-    { element: '.gallery-video-container__video-frame--active' }
+    { element: '.gallery-video-container__video-frame--active' },
+    { element: '.multi-speaker-main-container__video-frame.multi-speaker-main-container__video-frame--active' },
+    
+
   ]
 });
 
