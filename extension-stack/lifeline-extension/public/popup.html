@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Audio Recorder</title>
+    <style>
+        body {
+            width: 300px;
+            padding: 10px;
+            font-family: Arial, sans-serif;
+        }
+        button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #audioContainer {
+            margin-top: 10px;
+        }
+    </style>
+
+        <script src="popup.js"></script>
+</head>
+<body>
+    <h1>Audio Recorder</h1>
+    <button id="startButton">Start Recording</button>
+    <button id="stopButton">Stop Recording</button>
+    <div id="audioContainer">
+        <audio id="audioPlayer" controls></audio>
+    </div>
+</body>
+</html>

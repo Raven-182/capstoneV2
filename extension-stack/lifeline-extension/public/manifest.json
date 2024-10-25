@@ -1,0 +1,77 @@
+{
+    "name": "Lifeline Assistant",
+    "description": "Lifeline Assistant for productivity tools, integrated with AI for meeting management and more.",
+    "version": "0.1.0",
+    "manifest_version": 3,
+    "action": {
+      "default_title": "Click to open Lifeline Assistant",
+      "default_icon": "icons/icon.png"
+
+    },
+    "permissions": [
+        "storage",
+        "sidePanel",
+        "identity",
+        "tabs",
+        "scripting",
+        "activeTab"
+    ],
+    "side_panel": {
+        "default_path": "public/index.html"
+      },
+      "background": {
+        "service_worker": "service-worker.js"
+      },
+    "content_scripts": [
+    {
+      "matches": [
+        "https://*.zoom.us/*"
+      ],
+      "js": [
+        "content-scripts/mutation-summary.js",
+        "content-scripts/providers/zoom.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://teams.microsoft.com/*"
+      ],
+      "js": [
+        "content-scripts/mutation-summary.js",
+        "content-scripts/providers/teams.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content-scripts/recorder/inject-recorder.js"
+      ]
+    }
+   ],
+   "web_accessible_resources": [
+    {
+      "resources": [
+        "content-scripts/recorder/recorder.html",
+        "content-scripts/recorder/recorder.js",
+        "content-scripts/recorder/audio-worklet.js",
+        "content-scripts/providers/inject-teams.js",
+        "content-scripts/providers/inject-zoom.js"
+
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+    "host_permissions": [
+      "http://*/*",
+      "https://*/*"
+    ]
+  }
+  
