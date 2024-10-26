@@ -3,6 +3,7 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { auth, db } from '../../firebaseConfig';
 import { doc, setDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for routing
 import '../../App.css';
 import '../moodsurvey.css';
 
@@ -19,6 +20,7 @@ const MoodSurvey = () => {
   const [previousSurveys, setPreviousSurveys] = useState([]);
   const [searchDate, setSearchDate] = useState('');
 
+  const navigate = useNavigate(); 
   const user = auth.currentUser;
 
   const getMoodEmoji = (mood) => {
@@ -90,7 +92,7 @@ const MoodSurvey = () => {
     handleMoodAnalysisResult(result);
   };
 
-  const fetchPreviousSurveys = async () => {
+  /*const fetchPreviousSurveys = async () => {
     if (user) {
       const surveysCollectionRef = collection(db, "users", user.uid, "moodSurveys");
       const q = query(surveysCollectionRef, where("timestamp", ">=", new Date(searchDate)));
@@ -98,7 +100,47 @@ const MoodSurvey = () => {
       const surveys = querySnapshot.docs.map(doc => doc.data());
       setPreviousSurveys(surveys);
     }
+  };*/
+  /*const fetchPreviousSurveys = async () => {
+    if (user) {
+      const surveysCollectionRef = collection(db, "users", user.uid, "moodSurveys");
+      const q = query(surveysCollectionRef, where("timestamp", ">=", new Date(searchDate)));
+      const querySnapshot = await getDocs(q);
+      const surveys = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setPreviousSurveys(surveys);
+      navigate('/survey-history', { state: { surveys } }); // Navigate to SurveyHistory page with surveys data
+    }
+  };*/
+  const fetchPreviousSurveys = async () => {
+    if (user && searchDate) {
+      const surveysCollectionRef = collection(db, "users", user.uid, "moodSurveys");
+  
+      // Define start and end of the day for the search date
+      const startOfDay = new Date(searchDate);
+      startOfDay.setHours(0, 0, 0, 0); // Set to midnight of the search date
+      const endOfDay = new Date(searchDate);
+      endOfDay.setHours(23, 59, 59, 999); // Set to just before midnight of the next day
+  
+      // Query to fetch surveys with timestamp within the start and end of the specified day
+      const q = query(
+        surveysCollectionRef,
+        where("timestamp", ">=", startOfDay),
+        where("timestamp", "<=", endOfDay)
+      );
+  
+      const querySnapshot = await getDocs(q);
+      const surveys = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setPreviousSurveys(surveys);
+      navigate('/survey-history', { state: { surveys } }); // Navigate to SurveyHistory page with surveys data
+    }
   };
+  
 
   useEffect(() => {
     if (backgroundColor) {

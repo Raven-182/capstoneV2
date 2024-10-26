@@ -10,6 +10,7 @@ import SignUp from './components/pages/SignUp';
 import MeetingsDetails from './components/pages/MeetingsDetails';
 import MoodSurvey from './components/pages/MoodSurvey';
 import { auth } from './firebaseConfig'; // Import your Firebase config
+import SurveyHistory from './components/pages/SurveyHistory';
 
 function App() {
   const [userEmail, setUserEmail] = useState(null); // State to track user email
@@ -37,6 +38,7 @@ function App() {
         <Route path="/journals" element={<Journal />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/meetingsdetails" element={<MeetingsDetails />} />
+        <Route path="/survey-history" element={<SurveyHistory />} />
         <Route path="/moodsurvey" element={<MoodSurvey />} />
       </Routes>
     </Router>
