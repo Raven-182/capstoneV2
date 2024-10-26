@@ -1,18 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { db } from '../../firebaseConfig'; // Adjust this path if necessary
+import { db } from '../../firebaseConfig'; 
 import { doc, deleteDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth'; // Import Firebase Authentication
 import '../surveyhistory.css';
 
 const SurveyHistory = () => {
   const location = useLocation();
   const [surveys, setSurveys] = useState(location.state?.surveys || []);
+  const auth = getAuth(); // Get the Firebase auth instance
+  const user = auth.currentUser; // Get the current user
 
   // Delete survey function
   const handleDelete = async (id) => {
     try {
-      await deleteDoc(doc(db, 'surveys', id)); // Assumes 'surveys' is the collection name
-      setSurveys(surveys.filter((survey) => survey.id !== id)); // Update local state
+      if (user) {
+        await deleteDoc(doc(db, 'users', user.uid, 'moodSurveys', id));
+        setSurveys(surveys.filter((survey) => survey.id !== id)); // Update local state
+        console.log("Survey deleted successfully");
+      } else {
+        console.error("No user is signed in.");
+      }
     } catch (error) {
       console.error('Error deleting survey:', error);
     }
@@ -46,7 +54,7 @@ const SurveyHistory = () => {
                 <td>
                   <button
                     onClick={() => handleDelete(survey.id)}
-                    className="delete-button" >
+                    className="delete-button">
                     Delete
                   </button>
                 </td>
