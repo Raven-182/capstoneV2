@@ -1,31 +1,45 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import Navbar from './components/Navbar.js';
-import Home from './components/pages/Home.js';
-import { BrowserRouter as Router, Routes , Route } from 'react-router-dom';
-import Meetings from './components/pages/Meetings.js';
-import Calendars from './components/pages/Calendars.js';
-import Journal from './components/pages/Journal.js';
-import SignUp from './components/pages/SignUp.js';
-import MeetingsDetails from './components/pages/MeetingsDetails.js';
-import MoodSurvey from './components/pages/MoodSurvey.js';
+import Navbar from './components/Navbar';
+import Home from './components/pages/Home';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Meetings from './components/pages/Meetings';
+import Calendars from './components/pages/Calendars';
+import Journal from './components/pages/Journal';
+import SignUp from './components/pages/SignUp';
+import MeetingsDetails from './components/pages/MeetingsDetails';
+import MoodSurvey from './components/pages/MoodSurvey';
+import { auth } from './firebaseConfig'; // Import your Firebase config
+
 function App() {
+  const [userEmail, setUserEmail] = useState(null); // State to track user email
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user) {
+        setUserEmail(user.email); // Set user email if signed in
+      } else {
+        setUserEmail(null); // Clear user email if signed out
+      }
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
+
   return (
-    <>
     <Router>
-        <Navbar/>
-        <Routes>
-          <Route path="/" exact Component={Home}/>
-          <Route path="/calendars" exact Component={Calendars}/>
-          <Route path="/notes" exact Component={Meetings}/>
-          <Route path="/journals" exact Component={Journal}/>
-          <Route path="/sign-up" exact Component={SignUp}/>
-          <Route path="/meetingsdetails" exact Component={MeetingsDetails}/>
-          <Route path="/moodsurvey" exact Component={MoodSurvey}/>
-        </Routes>
-      </Router>
-    
-    </>
+      <Navbar userEmail={userEmail} />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/calendars" element={<Calendars />} />
+        <Route path="/notes" element={<Meetings />} />
+        <Route path="/journals" element={<Journal />} />
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/meetingsdetails" element={<MeetingsDetails />} />
+        <Route path="/moodsurvey" element={<MoodSurvey />} />
+      </Routes>
+    </Router>
   );
 }
 
