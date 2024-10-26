@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { auth, db } from '../../firebaseConfig'; // Import Firestore
-import { doc, setDoc } from "firebase/firestore"; // Import Firestore functions
+import { auth, db } from '../../firebaseConfig';
+import { doc, setDoc, collection, query, where, getDocs } from "firebase/firestore";
 import '../../App.css';
 import '../moodsurvey.css';
 
@@ -15,9 +15,11 @@ const MoodSurvey = () => {
   const [suggestions, setSuggestions] = useState('');
   const [backgroundColor, setBackgroundColor] = useState('');
   const [sectionBackgroundColor, setSectionBackgroundColor] = useState('');
-  const [showSuggestions, setShowSuggestions] = useState(false); // State to control suggestions visibility
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [previousSurveys, setPreviousSurveys] = useState([]);
+  const [searchDate, setSearchDate] = useState('');
 
-  const user = auth.currentUser; // Get the current signed-in user
+  const user = auth.currentUser;
 
   const getMoodEmoji = (mood) => {
     const moodEmojis = {
@@ -30,12 +32,10 @@ const MoodSurvey = () => {
 
   const updateBackgroundColors = (mood) => {
     const moodColors = {
-      positive: { main: 'rgba(119, 221, 119, 0.8)', section: 'rgba(119, 221, 119, 0.2)' }, // Soft green
-      neutral: { main: 'rgba(192, 192, 192, 0.8)', section: 'rgba(192, 192, 192, 0.2)' }, // Light gray
-      negative: { main: 'rgba(200, 100, 100, 0.8)', section: 'rgba(200, 100, 100, 0.2)' }  // Muted red
+      positive: { main: 'rgba(119, 221, 119, 0.8)', section: 'rgba(119, 221, 119, 0.2)' },
+      neutral: { main: 'rgba(192, 192, 192, 0.8)', section: 'rgba(192, 192, 192, 0.2)' },
+      negative: { main: 'rgba(200, 100, 100, 0.8)', section: 'rgba(200, 100, 100, 0.2)' }
     };
-    
-
     const colors = moodColors[mood] || moodColors['neutral'];
     setBackgroundColor(colors.main);
     setSectionBackgroundColor(colors.section);
@@ -60,9 +60,8 @@ const MoodSurvey = () => {
     setMoodScore(score);
     setSuggestions(suggestions);
     updateBackgroundColors(mood);
-    setShowSuggestions(true); // Show the suggestions after analysis
+    setShowSuggestions(true);
 
-    // Save the mood survey result to Firestore
     if (user) {
       const surveyData = {
         dayQuality,
@@ -71,11 +70,10 @@ const MoodSurvey = () => {
         extraDetails,
         moodScore: score,
         suggestions,
-        timestamp: new Date(), // Store the timestamp for when the survey was completed
+        timestamp: new Date(),
       };
 
       try {
-        // Create a document reference for the current user's mood survey
         const surveyDocRef = doc(db, "users", user.uid, "moodSurveys", `${new Date().toISOString()}`);
         await setDoc(surveyDocRef, surveyData);
         console.log("Mood survey results saved to Firestore:", surveyData);
@@ -90,6 +88,16 @@ const MoodSurvey = () => {
     const data = { description: dayQuality, extraDetails, exerciseTime, mealsCount };
     const result = await fetchMoodAnalysis(data);
     handleMoodAnalysisResult(result);
+  };
+
+  const fetchPreviousSurveys = async () => {
+    if (user) {
+      const surveysCollectionRef = collection(db, "users", user.uid, "moodSurveys");
+      const q = query(surveysCollectionRef, where("timestamp", ">=", new Date(searchDate)));
+      const querySnapshot = await getDocs(q);
+      const surveys = querySnapshot.docs.map(doc => doc.data());
+      setPreviousSurveys(surveys);
+    }
   };
 
   useEffect(() => {
@@ -116,7 +124,6 @@ const MoodSurvey = () => {
           handleSubmit={handleSubmit}
         />
         
-        {/* Conditionally render ProgressSection only when showSuggestions is true */}
         {showSuggestions && (
           <ProgressSection
             moodScore={moodScore}
@@ -125,6 +132,25 @@ const MoodSurvey = () => {
             getMoodEmoji={getMoodEmoji}
           />
         )}
+
+        <div className="previous-surveys-section">
+          <h3>Search Previous Surveys</h3>
+          <input
+            type="date"
+            value={searchDate}
+            onChange={(e) => setSearchDate(e.target.value)}
+          />
+          <button onClick={fetchPreviousSurveys}>Fetch Surveys</button>
+          <ul>
+            {previousSurveys.map((survey, index) => (
+              <li key={index}>
+                <p><strong>Date:</strong> {new Date(survey.timestamp.seconds * 1000).toLocaleDateString()}</p>
+                <p><strong>Mood Score:</strong> {survey.moodScore}</p>
+                <p><strong>Suggestions:</strong> {survey.suggestions}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
@@ -169,9 +195,9 @@ const FormSection = ({
         />
       </div>
       <div class="button-container">
-      <button className="submit-button" type="submit">
-        Analyze Mood
-      </button>
+        <button className="submit-button" type="submit">
+          Analyze Mood
+        </button>
       </div>
     </form>
   </div>
@@ -211,12 +237,10 @@ const ProgressSection = ({ moodScore, suggestions, sectionBackgroundColor, getMo
         </div>
       </div>
     )}
-    {suggestions && (
-      <div className="suggestions-container">
-        <h3>Suggestions for Tomorrow</h3>
-        <p>{suggestions}</p>
-      </div>
-    )}
+    <div className="suggestions-container">
+      <h3>Suggestions for Tomorrow</h3>
+      <p>{suggestions}</p>
+    </div>
   </div>
 );
 
