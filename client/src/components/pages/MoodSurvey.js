@@ -15,6 +15,7 @@ const MoodSurvey = () => {
   const [suggestions, setSuggestions] = useState('');
   const [backgroundColor, setBackgroundColor] = useState('');
   const [sectionBackgroundColor, setSectionBackgroundColor] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false); // State to control suggestions visibility
 
   const user = auth.currentUser; // Get the current signed-in user
 
@@ -29,10 +30,11 @@ const MoodSurvey = () => {
 
   const updateBackgroundColors = (mood) => {
     const moodColors = {
-      positive: { main: 'rgba(75, 192, 192, 0.8)', section: 'rgba(75, 192, 192, 0.2)' },
-      neutral: { main: 'rgba(255, 255, 0, 0.8)', section: 'rgba(255, 255, 0, 0.2)' },
-      negative: { main: 'rgba(255, 99, 132, 0.8)', section: 'rgba(255, 99, 132, 0.2)' },
+      positive: { main: 'rgba(119, 221, 119, 0.8)', section: 'rgba(119, 221, 119, 0.2)' }, // Soft green
+      neutral: { main: 'rgba(192, 192, 192, 0.8)', section: 'rgba(192, 192, 192, 0.2)' }, // Light gray
+      negative: { main: 'rgba(200, 100, 100, 0.8)', section: 'rgba(200, 100, 100, 0.2)' }  // Muted red
     };
+    
 
     const colors = moodColors[mood] || moodColors['neutral'];
     setBackgroundColor(colors.main);
@@ -58,6 +60,7 @@ const MoodSurvey = () => {
     setMoodScore(score);
     setSuggestions(suggestions);
     updateBackgroundColors(mood);
+    setShowSuggestions(true); // Show the suggestions after analysis
 
     // Save the mood survey result to Firestore
     if (user) {
@@ -112,12 +115,16 @@ const MoodSurvey = () => {
           setExtraDetails={setExtraDetails}
           handleSubmit={handleSubmit}
         />
-        <ProgressSection
-          moodScore={moodScore}
-          suggestions={suggestions}
-          sectionBackgroundColor={sectionBackgroundColor}
-          getMoodEmoji={getMoodEmoji}
-        />
+        
+        {/* Conditionally render ProgressSection only when showSuggestions is true */}
+        {showSuggestions && (
+          <ProgressSection
+            moodScore={moodScore}
+            suggestions={suggestions}
+            sectionBackgroundColor={sectionBackgroundColor}
+            getMoodEmoji={getMoodEmoji}
+          />
+        )}
       </div>
     </div>
   );
@@ -161,9 +168,11 @@ const FormSection = ({
           onChange={(e) => setExtraDetails(e.target.value)}
         />
       </div>
+      <div class="button-container">
       <button className="submit-button" type="submit">
         Analyze Mood
       </button>
+      </div>
     </form>
   </div>
 );
@@ -193,8 +202,8 @@ const ProgressSection = ({ moodScore, suggestions, sectionBackgroundColor, getMo
           minValue={-10}
           styles={buildStyles({
             pathColor: moodScore > 0 ? 'rgba(75, 192, 192, 0.8)' : 'rgba(255, 99, 132, 0.8)',
-            textColor: '#333',
-            trailColor: '#ddd',
+            textColor: 'white',
+            trailColor: 'white',
           })}
         />
         <div className="mood-emoji" style={{ fontSize: '2rem', marginTop: '10px' }}>
