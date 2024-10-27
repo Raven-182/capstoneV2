@@ -43,9 +43,9 @@ const MoodSurvey = () => {
     setSectionBackgroundColor(colors.section);
   };
 
-  const fetchMoodAnalysis = async (data) => {
+  /*const fetchMoodAnalysis = async (data) => {
     try {
-      const response = await fetch('http://localhost:9000/api/survey/analyze', {
+      const response = await fetch('http://localhost:9000/api/survey/analyze/:userId', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -54,7 +54,29 @@ const MoodSurvey = () => {
     } catch (error) {
       console.error('Error analyzing mood:', error);
     }
+  };*/
+
+  const fetchMoodAnalysis = async (data) => {
+    try {
+      if (user) { // Check if user is logged in
+        const idToken = await user.getIdToken(); // Get ID token
+        const response = await fetch('http://localhost:9000/api/survey/analyze', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${idToken}` // Include ID token in the Authorization header
+          },
+          body: JSON.stringify(data),
+        });
+        return await response.json();
+      } else {
+        console.error("User not logged in. Cannot fetch mood analysis.");
+      }
+    } catch (error) {
+      console.error('Error analyzing mood:', error);
+    }
   };
+  
 
   const handleMoodAnalysisResult = async (result) => {
     const { mood, score, suggestions } = result;
@@ -92,28 +114,7 @@ const MoodSurvey = () => {
     handleMoodAnalysisResult(result);
   };
 
-  /*const fetchPreviousSurveys = async () => {
-    if (user) {
-      const surveysCollectionRef = collection(db, "users", user.uid, "moodSurveys");
-      const q = query(surveysCollectionRef, where("timestamp", ">=", new Date(searchDate)));
-      const querySnapshot = await getDocs(q);
-      const surveys = querySnapshot.docs.map(doc => doc.data());
-      setPreviousSurveys(surveys);
-    }
-  };*/
-  /*const fetchPreviousSurveys = async () => {
-    if (user) {
-      const surveysCollectionRef = collection(db, "users", user.uid, "moodSurveys");
-      const q = query(surveysCollectionRef, where("timestamp", ">=", new Date(searchDate)));
-      const querySnapshot = await getDocs(q);
-      const surveys = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setPreviousSurveys(surveys);
-      navigate('/survey-history', { state: { surveys } }); // Navigate to SurveyHistory page with surveys data
-    }
-  };*/
+ 
   const fetchPreviousSurveys = async () => {
     if (user && searchDate) {
       const surveysCollectionRef = collection(db, "users", user.uid, "moodSurveys");
@@ -140,7 +141,6 @@ const MoodSurvey = () => {
       navigate('/survey-history', { state: { surveys } }); // Navigate to SurveyHistory page with surveys data
     }
   };
-  
 
   useEffect(() => {
     if (backgroundColor) {
