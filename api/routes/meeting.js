@@ -1,61 +1,76 @@
-var express = require("express");
+var express = require('express');
 var router = express.Router();
-const GoogleService = require('../google-service');
-let allTranscripts = [];
-async function setupGoogleService() {
-    try {
-        const googleService = new GoogleService();
-        const authClient = await googleService.authorize();
+const { writeMeetingData, getMeetingData, updateMeetingData, deleteMeetingData, getAllMeetingData } = require('../firebaseManager');
 
-         console.log('running setup google service');
-        return {googleService, authClient}
-    }
-    catch (e) {
-        console.log(e)
-    }
-}
+// Create a new meeting
+router.post('/:userId', async function(req, res) {
+  const userId = req.params.userId;
+  const meetingData = req.body;
 
-router.get("/", function (req, res, next) {
-    res.send("API is working properly");
+  const result = await writeMeetingData(userId, meetingData);
+  
+  if (result.success) {
+    res.status(200).json({ message: "Meeting saved successfully", meetingId: result.meetingId });
+  } else {
+    res.status(500).json({ message: "Failed to save meeting", error: result.error });
+  }
 });
 
-router.get("/notes", async function (req, res, next) {
-    const { googleService, authClient } = await setupGoogleService()
-     const conferenceRecords = await googleService.getAllListConferenceRecords(authClient)
-    //const response2 = googleService.listConferenceRecords(authClient);
-    allTranscripts = [];
-    for (const record of conferenceRecords) {
-        const parent = record.name;
-        const transcripts = await googleService.getAllTranscriptsForConf(authClient, parent);
-         const transcriptNames = transcripts.map(transcript => transcript.name);
-        // allTranscripts.push({ meetingName: record, transcriptNames });
-        const transcriptEntries = [];
-        for (const entry of transcriptNames){
-            const entries =await googleService.callListTranscriptEntries(authClient, entry);
-            console.log(entries);
-            transcriptEntries.push(...entries.map(entry => ({
-                participant: entry.participantDisplayName,
-                text: entry.text,
-                startTime: entry.startTime.seconds, // Accessing seconds value
-                endTime: entry.endTime.seconds, // Accessing seconds value
-                languageCode: entry.languageCode // Language code can be directly accessed
-                
-            })));
-            
-        }
-        allTranscripts.push({
-            meeting: {
-                name: record.name,
-                startTime: record.startTime.seconds, // Accessing seconds value
-                endTime: record.endTime.seconds, // Accessing seconds value
-                expireTime: record.expireTime.seconds, // Accessing seconds value
-                space: record.space
-            },
-            transcriptEntries: transcriptEntries
-    });
-    }
+// Get a meeting by ID
+router.get('/:userId/:meetingId', async function(req, res) {
+  const userId = req.params.userId;
+  const meetingId = req.params.meetingId;
 
-    res.send(allTranscripts)
+  const result = await getMeetingData(userId, meetingId);
+
+  if (result.success) {
+    res.status(200).json(result.data);
+  } else {
+    res.status(404).json({ message: result.message, error: result.error });
+  }
+});
+
+
+// Get all meetings for a user
+router.get('/:userId', async function(req, res) {
+    const userId = req.params.userId;
+  
+    const result = await getAllMeetingData(userId);
+  
+    if (result.success) {
+      res.status(200).json(result.data);
+    } else {
+      res.status(404).json({ message: result.message, error: result.error });
+    }
+  });
+
+// Update a meeting
+router.put('/:userId/:meetingId', async function(req, res) {
+  const userId = req.params.userId;
+  const meetingId = req.params.meetingId;
+  const updatedData = req.body;
+
+  const result = await updateMeetingData(userId, meetingId, updatedData);
+
+  if (result.success) {
+    res.status(200).json({ message: "Meeting updated successfully" });
+  } else {
+    res.status(500).json({ message: "Failed to update meeting", error: result.error });
+  }
+});
+
+// Delete a meeting
+router.delete('/:userId/:meetingId', async function(req, res) {
+  const userId = req.params.userId;
+  const meetingId = req.params.meetingId;
+
+  const result = await deleteMeetingData(userId, meetingId);
+
+  if (result.success) {
+    res.status(200).json({ message: "Meeting deleted successfully" });
+  } else {
+    res.status(500).json({ message: "Failed to delete meeting", error: result.error });
+  }
 });
 
 module.exports = router;

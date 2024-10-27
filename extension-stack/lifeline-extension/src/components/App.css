@@ -139,6 +139,11 @@ button:disabled {
   transition: opacity 0.3s; 
   font-size: 12px;
 }
+.success-message {
+  color: green;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
 
 
 @media (max-width: 768px) {
