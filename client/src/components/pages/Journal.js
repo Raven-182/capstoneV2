@@ -1,110 +1,99 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import '../../App.css';
 import '../Journal.css';
 import TextJournal from '../TextJournal';
 import VoiceJournal from '../VoiceJournal';
 import EditTextJournal from '../EditTextJournal';
-
+import { auth, db } from '../../firebaseConfig'; // Make sure to import auth
+import { collection, addDoc, deleteDoc, doc, onSnapshot, updateDoc } from "firebase/firestore";
 
 export default function Journal() {
+    const user = auth.currentUser; // Get the currently logged-in user
     const [showTextJournal, setShowTextJournal] = useState(false);
     const [showVoiceJournal, setShowVoiceJournal] = useState(false);
     const [journalEntries, setJournalEntries] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [filter, setFilter] = useState('all');
-    const [isRecording, setIsRecording] = useState(false); // Track recording state
-
+    const [isRecording, setIsRecording] = useState(false); // Track recording s
     const [editEntry, setEditEntry] = useState(null);
     const [showEditTextEntry, setShowEditTextEntry] = useState(false);
     const [editText, setEditText] = useState("");
     const [editTitle, setEditTitle] = useState("");
 
-    // Create refs for text and voice journal areas
     const textJournalRef = useRef(null);
     const voiceJournalRef = useRef(null);
     const editTextJournalRef = useRef(null);
 
-    const handleTextSubmit = (title, text) => {
+    useEffect(() => {
+        if (user) {
+            const unsubscribe = onSnapshot(collection(db, "users", user.uid, "journalEntries"), (snapshot) => {
+                const entries = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                setJournalEntries(entries);
+            });
+
+            return () => unsubscribe();
+        }
+    }, [user]); // Fetch data when user changes
+
+    const handleTextSubmit = async (title, text) => {
         const dateTime = new Date().toLocaleString();
-        setJournalEntries([...journalEntries, {
-            id: Date.now(),
+        await addDoc(collection(db, "users", user.uid, "journalEntries"), {
             title: title,
             type: 'text',
             content: text,
-            dateTime
-        }]);
+            dateTime: dateTime
+        });
         setShowTextJournal(false);
-    };
-
-    const handleVoiceSubmit = (audioUrl, title) => {
-        const dateTime = new Date().toLocaleString();
-        setJournalEntries([...journalEntries, {
-            id: Date.now(),
-            type: 'audio',
-            title: title,
-            content: audioUrl,
-            dateTime
-        }]);
-        setShowVoiceJournal(false);
-    };
-
-    const handleDelete = (id) => {
-        setJournalEntries(journalEntries.filter(entry => entry.id !== id));
-    };
-
-    const handleEdit = (id) => {
-        const entry = journalEntries.find(entry => entry.id === id); // Find the entry
-        if (entry) {
-            setEditText(entry.content); // Set the text content
-            setEditTitle(entry.title);  // Set the title
-            setEditEntry(entry);        // Set the whole entry 
-            setShowEditTextEntry(true); // Show the edit form
-        }
+        // Scroll to the journal entries
         setTimeout(() => {
-            if (editTextJournalRef.current) {
-                editTextJournalRef.current.scrollIntoView({ behavior: 'smooth' });
+            if (textJournalRef.current) {
+                textJournalRef.current.scrollIntoView({ behavior: 'smooth' });
             }
-        }, 100); // Scroll after component has mounted
+        }, 100);
     };
-    
 
     const handleCancelVoice = () => {
         setShowVoiceJournal(false);
         setIsRecording(false);
     };
-    const handleCancelText = () => setShowTextJournal(false);
 
-    const handleCancelEditText = () => setShowEditTextEntry(false);
-
-    const handleEditTextSubmit = (title, text) => {
-        setJournalEntries(journalEntries.map(entry => 
-            entry.id === editEntry.id ? { ...entry, title, content: text } : entry
-        ));
-        setShowEditTextEntry(false); // Hide the edit form
-    };    
-
-    const newTextJournal = () => {
-        if (showVoiceJournal) setShowVoiceJournal(false);
-        setShowTextJournal(true);
-        setTimeout(() => {
-            if (textJournalRef.current) {
-                textJournalRef.current.scrollIntoView({ behavior: 'smooth' });
-            }
-        }, 100); // Scroll after component has mounted
+    const handleVoiceSubmit = async (audioUrl, title) => {
+        const dateTime = new Date().toLocaleString();
+        await addDoc(collection(db, "users", user.uid, "journalEntries"), {
+            title: title,
+            type: 'audio',
+            content: audioUrl,
+            dateTime: dateTime
+        });
+        setShowVoiceJournal(false);
     };
-    
-    const newVoiceJournal = () => {
-        if (showTextJournal) setShowTextJournal(false);
-        setShowVoiceJournal(true);
-        setTimeout(() => {
-            if (voiceJournalRef.current) {
-                voiceJournalRef.current.scrollIntoView({ behavior: 'smooth' });
-            }
-        }, 100); // Scroll after component has mounted
-    };
-    
 
-    const handleFilterChange = (type) => setFilter(type);
+    const handleDelete = async (id) => {
+        await deleteDoc(doc(db, "users", user.uid, "journalEntries", id));
+    };
+
+    const handleEdit = (id) => {
+        const entry = journalEntries.find(entry => entry.id === id);
+        if (entry) {
+            setEditText(entry.content);
+            setEditTitle(entry.title);
+            setEditEntry(entry);
+            setShowEditTextEntry(true);
+            setTimeout(() => {
+                if (editTextJournalRef.current) {
+                    editTextJournalRef.current.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 100); // Scroll to edit form
+        }
+    };
+
+    const handleEditTextSubmit = async (title, text) => {
+        await updateDoc(doc(db, "users", user.uid, "journalEntries", editEntry.id), {
+            title: title,
+            content: text
+        });
+        setShowEditTextEntry(false);
+    };
 
     const filteredEntries = journalEntries.filter((entry) => {
         if (filter === 'all') return true;
@@ -116,9 +105,9 @@ export default function Journal() {
             <div className="journal-container">
                 <div className="journal-left">
                     <div className="filter-buttons">
-                        <button onClick={() => handleFilterChange('all')}>All</button>
-                        <button onClick={() => handleFilterChange('text')}>Text</button>
-                        <button onClick={() => handleFilterChange('audio')}>Voice</button>
+                        <button onClick={() => setFilter('all')}>All</button>
+                        <button onClick={() => setFilter('text')}>Text</button>
+                        <button onClick={() => setFilter('audio')}>Voice</button>
                     </div>
 
                     <input
@@ -129,7 +118,7 @@ export default function Journal() {
                         className="search-bar"
                     />
 
-                    <div className="journal-entries">
+                    <div className="journal-entries" ref={textJournalRef}>
                         {filteredEntries.length === 0 ? (
                             <p className="no-entries-message">No journal entries</p>
                         ) : (
@@ -147,8 +136,7 @@ export default function Journal() {
                                                     <button className="entry_edit" onClick={() => handleEdit(entry.id)}>
                                                         <i className="fa-solid fa-pen-to-square"></i>
                                                     </button>
-                                                    
-                                                    {/* Text Download Button */}
+
                                                     <a 
                                                         href={`data:text/plain;charset=utf-8,${encodeURIComponent(entry.content)}`} 
                                                         download={`${entry.title}.txt`}
@@ -167,7 +155,6 @@ export default function Journal() {
                                                         Your browser does not support the audio tag.
                                                     </audio>
 
-                                                    {/* Audio Download Button */}
                                                     <a href={entry.content} download={`${entry.title}.mp3`}>
                                                         <button className="entry_download">
                                                             <i className="fa-solid fa-download"></i>
@@ -184,39 +171,45 @@ export default function Journal() {
                                         </div>
                                     </div>
                                 </div>
-
                             ))
                         )}
                     </div>
-
                 </div>
 
                 <div className="journal-right">
-                    <h1 className="journal-text1">
-                        <i className="fa-solid fa-book-open"></i> My Journal
-                    </h1>
+                    <h1 className="journal-text1"><i className="fa-solid fa-book-open"></i> My Journal</h1>
                     <p className="journal-text2">Journal of Thoughts & Ideas.</p>
                     <p className="journal-text3">Share Your Journey: Text or Voice Entries</p>
                     <div className="journal-buttons">
-                        <button
-                            className="circular-button text-button" 
-                            onClick={() => newTextJournal()}
-                        >
+                        <button className="circular-button text-button" onClick={() => {
+                            setShowTextJournal(true);
+                            setShowVoiceJournal(false); // Close voice journal when opening text journal
+                            setTimeout(() => {
+                                if (textJournalRef.current) {
+                                    textJournalRef.current.scrollIntoView({ behavior: 'smooth' });
+                                }
+                            }, 100);
+                        }}>
                             <i className="fas fa-book" style={{ fontSize: '30px' }}></i>
                         </button>
 
-                        <button
-                            className="circular-button voice-button"
-                            onClick={() => newVoiceJournal()}
-                        >
-                            <i className={`fas fa-microphone ${isRecording ? 'bounce' : ''}`} style={{ fontSize: '30px' }}></i>
+                        <button className="circular-button voice-button" onClick={() => {
+                            setShowVoiceJournal(true);
+                            setShowTextJournal(false); // Close text journal when opening voice journal
+                            setTimeout(() => {
+                                if (voiceJournalRef.current) {
+                                    voiceJournalRef.current.scrollIntoView({ behavior: 'smooth' });
+                                }
+                            }, 100); // Adjust the delay if necessary
+                        }}>
+                             <i className={`fas fa-microphone ${isRecording ? 'bounce' : ''}`} style={{ fontSize: '30px' }}></i>
                         </button>
                     </div>
 
                     {showTextJournal && (
                         <>
-                        <TextJournal ref={textJournalRef} onSubmit={handleTextSubmit} />
-                            <button className="cancel-button" onClick={handleCancelText}>
+                            <TextJournal ref={textJournalRef} onSubmit={handleTextSubmit} />
+                            <button className="cancel-button" onClick={() => setShowTextJournal(false)}>
                                 Cancel
                             </button>
                         </>
@@ -224,13 +217,13 @@ export default function Journal() {
 
                     {showEditTextEntry && (
                         <>
-                                <EditTextJournal
-                                    ref={editTextJournalRef}
-                                    editText={editText} // Pass editText as prop
-                                    editTitle={editTitle} // Pass editTitle as prop
-                                    onSubmit={handleEditTextSubmit} // Handle form submission
-                                />
-                            <button className="cancel-button" onClick={handleCancelEditText}>
+                            <EditTextJournal
+                                ref={editTextJournalRef}
+                                editText={editText}
+                                editTitle={editTitle}
+                                onSubmit={handleEditTextSubmit}
+                            />
+                            <button className="cancel-button" onClick={() => setShowEditTextEntry(false)}>
                                 Cancel
                             </button>
                         </>
