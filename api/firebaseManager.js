@@ -97,8 +97,6 @@ async function getAllMeetingData(userId) {
   }
 }
 
-module.exports = { writeMeetingData, getMeetingData, updateMeetingData, deleteMeetingData, getAllMeetingData };
-
 /************************************* Mood survey methods  *************** */
 
 // Write mood survey data
@@ -228,5 +226,6 @@ module.exports = {
   getMoodSurveysByDate, 
   updateMoodSurveyData, 
   deleteMoodSurveyData, 
-  getAllMoodSurveyData 
+  getAllMoodSurveyData,
+  writeMeetingData, getMeetingData, updateMeetingData, deleteMeetingData, getAllMeetingData 
 };
