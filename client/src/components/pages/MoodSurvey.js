@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { auth, db } from '../../firebaseConfig'; // Import Firestore
-import { doc, setDoc } from "firebase/firestore"; // Import Firestore functions
+import { auth, db } from '../../firebaseConfig';
+import { doc, setDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for routing
 import '../../App.css';
 import '../moodsurvey.css';
 
@@ -15,8 +16,12 @@ const MoodSurvey = () => {
   const [suggestions, setSuggestions] = useState('');
   const [backgroundColor, setBackgroundColor] = useState('');
   const [sectionBackgroundColor, setSectionBackgroundColor] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [previousSurveys, setPreviousSurveys] = useState([]);
+  const [searchDate, setSearchDate] = useState('');
 
-  const user = auth.currentUser; // Get the current signed-in user
+  const navigate = useNavigate(); 
+  const user = auth.currentUser;
 
   const getMoodEmoji = (mood) => {
     const moodEmojis = {
@@ -29,19 +34,18 @@ const MoodSurvey = () => {
 
   const updateBackgroundColors = (mood) => {
     const moodColors = {
-      positive: { main: 'rgba(75, 192, 192, 0.8)', section: 'rgba(75, 192, 192, 0.2)' },
-      neutral: { main: 'rgba(255, 255, 0, 0.8)', section: 'rgba(255, 255, 0, 0.2)' },
-      negative: { main: 'rgba(255, 99, 132, 0.8)', section: 'rgba(255, 99, 132, 0.2)' },
+      positive: { main: 'rgba(119, 221, 119, 0.8)', section: 'rgba(119, 221, 119, 0.2)' },
+      neutral: { main: 'rgba(192, 192, 192, 0.8)', section: 'rgba(192, 192, 192, 0.2)' },
+      negative: { main: 'rgba(200, 100, 100, 0.8)', section: 'rgba(200, 100, 100, 0.2)' }
     };
-
     const colors = moodColors[mood] || moodColors['neutral'];
     setBackgroundColor(colors.main);
     setSectionBackgroundColor(colors.section);
   };
 
-  const fetchMoodAnalysis = async (data) => {
+  /*const fetchMoodAnalysis = async (data) => {
     try {
-      const response = await fetch('http://localhost:9000/api/survey/analyze', {
+      const response = await fetch('http://localhost:9000/api/survey/analyze/:userId', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -50,7 +54,29 @@ const MoodSurvey = () => {
     } catch (error) {
       console.error('Error analyzing mood:', error);
     }
+  };*/
+
+  const fetchMoodAnalysis = async (data) => {
+    try {
+      if (user) { // Check if user is logged in
+        const idToken = await user.getIdToken(); // Get ID token
+        const response = await fetch('http://localhost:9000/api/survey/analyze', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${idToken}` // Include ID token in the Authorization header
+          },
+          body: JSON.stringify(data),
+        });
+        return await response.json();
+      } else {
+        console.error("User not logged in. Cannot fetch mood analysis.");
+      }
+    } catch (error) {
+      console.error('Error analyzing mood:', error);
+    }
   };
+  
 
   const handleMoodAnalysisResult = async (result) => {
     const { mood, score, suggestions } = result;
@@ -58,8 +84,8 @@ const MoodSurvey = () => {
     setMoodScore(score);
     setSuggestions(suggestions);
     updateBackgroundColors(mood);
+    setShowSuggestions(true);
 
-    // Save the mood survey result to Firestore
     if (user) {
       const surveyData = {
         dayQuality,
@@ -68,11 +94,10 @@ const MoodSurvey = () => {
         extraDetails,
         moodScore: score,
         suggestions,
-        timestamp: new Date(), // Store the timestamp for when the survey was completed
+        timestamp: new Date(),
       };
 
       try {
-        // Create a document reference for the current user's mood survey
         const surveyDocRef = doc(db, "users", user.uid, "moodSurveys", `${new Date().toISOString()}`);
         await setDoc(surveyDocRef, surveyData);
         console.log("Mood survey results saved to Firestore:", surveyData);
@@ -87,6 +112,34 @@ const MoodSurvey = () => {
     const data = { description: dayQuality, extraDetails, exerciseTime, mealsCount };
     const result = await fetchMoodAnalysis(data);
     handleMoodAnalysisResult(result);
+  };
+
+ 
+  const fetchPreviousSurveys = async () => {
+    if (user && searchDate) {
+      const surveysCollectionRef = collection(db, "users", user.uid, "moodSurveys");
+  
+      // Define start and end of the day for the search date
+      const startOfDay = new Date(searchDate);
+      startOfDay.setHours(0, 0, 0, 0); // Set to midnight of the search date
+      const endOfDay = new Date(searchDate);
+      endOfDay.setHours(23, 59, 59, 999); // Set to just before midnight of the next day
+  
+      // Query to fetch surveys with timestamp within the start and end of the specified day
+      const q = query(
+        surveysCollectionRef,
+        where("timestamp", ">=", startOfDay),
+        where("timestamp", "<=", endOfDay)
+      );
+  
+      const querySnapshot = await getDocs(q);
+      const surveys = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setPreviousSurveys(surveys);
+      navigate('/survey-history', { state: { surveys } }); // Navigate to SurveyHistory page with surveys data
+    }
   };
 
   useEffect(() => {
@@ -112,12 +165,34 @@ const MoodSurvey = () => {
           setExtraDetails={setExtraDetails}
           handleSubmit={handleSubmit}
         />
-        <ProgressSection
-          moodScore={moodScore}
-          suggestions={suggestions}
-          sectionBackgroundColor={sectionBackgroundColor}
-          getMoodEmoji={getMoodEmoji}
-        />
+        
+        {showSuggestions && (
+          <ProgressSection
+            moodScore={moodScore}
+            suggestions={suggestions}
+            sectionBackgroundColor={sectionBackgroundColor}
+            getMoodEmoji={getMoodEmoji}
+          />
+        )}
+
+        <div className="previous-surveys-section">
+          <h3>Search Previous Surveys</h3>
+          <input
+            type="date"
+            value={searchDate}
+            onChange={(e) => setSearchDate(e.target.value)}
+          />
+          <button onClick={fetchPreviousSurveys}>Fetch Surveys</button>
+          <ul>
+            {previousSurveys.map((survey, index) => (
+              <li key={index}>
+                <p><strong>Date:</strong> {new Date(survey.timestamp.seconds * 1000).toLocaleDateString()}</p>
+                <p><strong>Mood Score:</strong> {survey.moodScore}</p>
+                <p><strong>Suggestions:</strong> {survey.suggestions}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
@@ -161,9 +236,11 @@ const FormSection = ({
           onChange={(e) => setExtraDetails(e.target.value)}
         />
       </div>
-      <button className="submit-button" type="submit">
-        Analyze Mood
-      </button>
+      <div class="button-container">
+        <button className="submit-button" type="submit">
+          Analyze Mood
+        </button>
+      </div>
     </form>
   </div>
 );
@@ -193,8 +270,8 @@ const ProgressSection = ({ moodScore, suggestions, sectionBackgroundColor, getMo
           minValue={-10}
           styles={buildStyles({
             pathColor: moodScore > 0 ? 'rgba(75, 192, 192, 0.8)' : 'rgba(255, 99, 132, 0.8)',
-            textColor: '#333',
-            trailColor: '#ddd',
+            textColor: 'white',
+            trailColor: 'white',
           })}
         />
         <div className="mood-emoji" style={{ fontSize: '2rem', marginTop: '10px' }}>
@@ -202,12 +279,10 @@ const ProgressSection = ({ moodScore, suggestions, sectionBackgroundColor, getMo
         </div>
       </div>
     )}
-    {suggestions && (
-      <div className="suggestions-container">
-        <h3>Suggestions for Tomorrow</h3>
-        <p>{suggestions}</p>
-      </div>
-    )}
+    <div className="suggestions-container">
+      <h3>Suggestions for Tomorrow</h3>
+      <p>{suggestions}</p>
+    </div>
   </div>
 );
 

@@ -118,4 +118,10 @@
     left: 0;
     transform: translate(25%, 50%);
   }
+  .disabled-link {
+    color: #888;
+    cursor: not-allowed;
+    pointer-events: none; /* Makes the element truly non-interactive */
+  }
+  
 }

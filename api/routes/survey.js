@@ -1,9 +1,11 @@
 const express = require('express');
-var router = express.Router();
-const cors = require('cors');//eneble cross-orgin sharing when front and back and hosted in different environement to communicate
-const bodyParser = require('body-parser');//which parses incoming request bodies, making it easier to access data in the req.body object
-const Sentiment = require('sentiment');//sentiment library for analysie on text
+const router = express.Router();
+const cors = require('cors'); // Enable cross-origin sharing
+const bodyParser = require('body-parser'); // Parses incoming request bodies
+const Sentiment = require('sentiment'); // Sentiment library for text analysis
 const OpenAI = require('openai');
+const { writeMoodSurveyData, getAllMoodSurveyData } = require('../firebaseManager'); // Import Firebase methods
+const admin = require('firebase-admin');
 
 // Load environment variables from the .env file
 require('dotenv').config();
@@ -14,37 +16,43 @@ const openai = new OpenAI({
 });
 
 router.use(cors());
-router.use(express.json()); // Middleware for parsing JSON,allowing the API to handle requests with JSON bodies.
+router.use(express.json()); // Middleware for parsing JSON
 
 // Initialize sentiment analysis
 const sentiment = new Sentiment();
 
 /**
- * GET Route for verifying the API status
+ * Middleware to verify Firebase ID Token
  */
-router.get("/", (req, res) => {
-  res.send("Survey API is working properly");
-});
+const verifyIdToken = async (req, res, next) => {
+  const authorization = req.headers.authorization;
+
+  if (!authorization || !authorization.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  const idToken = authorization.split('Bearer ')[1];
+
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    req.userId = decodedToken.uid; // Attach userId to the request object
+    next(); // Proceed to the next middleware or route handler
+  } catch (error) {
+    console.error('Error verifying ID token:', error);
+    return res.status(403).json({ message: 'Unauthorized' });
+  }
+};
 
 /**
  * Function to construct the OpenAI prompt based on user's input.
- * @param {string} dayQuality - The description of the user's day (e.g. "good", "bad").
- * @param {string} exerciseTime - Whether the user exercised (e.g. "yes" or "no").
- * @param {string} mealsCount - How many meals the user had (e.g. "one", "two", "three").
- * @param {string} extraDetails - Additional details provided by the user.
- * @returns {string} - The prompt to send to OpenAI.
  */
-
-/*his function constructs a prompt string to be sent to OpenAI. It starts by logging the user's description of their day (e.g., "good", "bad").*/
 function createPrompt(dayQuality, exerciseTime, mealsCount, extraDetails) {
   let prompt = `User's day was described as: "${dayQuality}".\n\n`;
-   
-  // Add exercise suggestions if the user did not exercise
+
   if (exerciseTime === 'no') {
     prompt += `\n**Exercise Suggestions:**\nThey did not exercise today. Suggest a simple exercise routine they could try tomorrow.\n\n`;
   }
 
-  // Add meal suggestions based on the number of meals
   if (mealsCount === 'one') {
     prompt += `\n**Diet Suggestions:**\nThey had only one meal today. Suggest healthy meals to improve their diet.\n\n`;
   } else if (mealsCount === 'two') {
@@ -53,7 +61,6 @@ function createPrompt(dayQuality, exerciseTime, mealsCount, extraDetails) {
     prompt += `\n**Diet Suggestions:**\nThey had three meals today. Good job, but remind them to eat wisely.\n\n`;
   }
 
-  // Include any extra details provided by the user
   if (extraDetails) {
     prompt += `\n**Extra Details:**\nAdditional details: "${extraDetails}".\n\n`;
   }
@@ -65,8 +72,6 @@ function createPrompt(dayQuality, exerciseTime, mealsCount, extraDetails) {
 
 /**
  * Function to fetch suggestions from OpenAI API
- * @param {string} prompt - The constructed prompt to send to the API
- * @returns {Promise<string>} - The response text from OpenAI
  */
 async function fetchSuggestionsFromOpenAI(prompt) {
   try {
@@ -83,15 +88,10 @@ async function fetchSuggestionsFromOpenAI(prompt) {
 
 /**
  * Function to calculate mood score based on user's input
- * @param {string} description - The quality of the day
- * @param {string} exerciseTime - Whether the user exercised
- * @param {string} mealsCount - Number of meals the user had
- * @returns {number} - The calculated mood score
  */
 function calculateMoodScore(description, exerciseTime, mealsCount) {
   let moodScore = 0;
 
-  // Add points based on day description
   switch (description) {
     case 'good':
       moodScore += 10;
@@ -104,10 +104,8 @@ function calculateMoodScore(description, exerciseTime, mealsCount) {
       break;
   }
 
-  // Add points for exercise
   if (exerciseTime === 'yes') moodScore += 5;
 
-  // Add points for meals
   switch (mealsCount) {
     case 'three':
       moodScore += 10;
@@ -125,8 +123,6 @@ function calculateMoodScore(description, exerciseTime, mealsCount) {
 
 /**
  * Function to analyze the mood based on moodScore
- * @param {number} moodScore - The calculated mood score
- * @returns {string} - The mood analysis ("positive", "neutral", "negative")
  */
 function analyzeMood(moodScore) {
   if (moodScore > 10) return 'positive';
@@ -137,22 +133,52 @@ function analyzeMood(moodScore) {
 /**
  * POST Route to analyze user's mood and provide suggestions
  */
-router.post('/analyze', async (req, res) => {
+router.post('/analyze', verifyIdToken, async (req, res) => {
+  const userId = req.userId;  // Extracted from verified token by middleware
   const { description, extraDetails, exerciseTime, mealsCount } = req.body;
 
-  // Log received data
-  console.log('Received Data:', { description, extraDetails, exerciseTime, mealsCount });
+  console.log('Received Data:', { userId, description, extraDetails, exerciseTime, mealsCount });
 
-  // Calculate mood score and analyze mood
   const moodScore = calculateMoodScore(description, exerciseTime, mealsCount);
   const mood = analyzeMood(moodScore);
 
-  // Construct prompt and get suggestions from OpenAI
   const prompt = createPrompt(description, exerciseTime, mealsCount, extraDetails);
   const suggestions = await fetchSuggestionsFromOpenAI(prompt);
 
-  // Send the mood and suggestions back to the client
-  res.json({ mood, score: moodScore, suggestions });
+  // Prepare the mood survey data
+  const moodSurveyData = {
+    description,
+    extraDetails,
+    exerciseTime,
+    mealsCount,
+    mood,
+    score: moodScore,
+    suggestions,
+    timestamp: new Date().toISOString() // Add timestamp for when the survey was taken
+  };
+
+  // Save mood survey data to Firebase
+  const result = await writeMoodSurveyData(userId, moodSurveyData);
+  if (result.success) {
+    res.json({ message: "Mood survey saved successfully", mood, score: moodScore, suggestions });
+  } else {
+    res.status(500).json({ message: "Failed to save mood survey", error: result.error });
+  }
+});
+
+/**
+ * GET Route to retrieve all mood surveys for a user
+ */
+router.get('/surveys', verifyIdToken, async (req, res) => {
+  const userId = req.userId; // Extracted from verified token by middleware
+
+  // Fetch all mood surveys from Firebase
+  const result = await getAllMoodSurveyData(userId);
+  if (result.success) {
+    res.status(200).json(result.data);
+  } else {
+    res.status(404).json({ message: result.message, error: result.error });
+  }
 });
 
 module.exports = router;

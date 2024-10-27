@@ -4,144 +4,167 @@
   justify-content: center;
   padding: 20px;
   min-height: 100vh; /* Full viewport height */
-  background-image: 
-      linear-gradient(to bottom, rgba(0, 7, 14, 0.977), rgba(0, 19, 32, 0.936)), /* Gradient */
-      url('/images/moodsurvey.jpg'); /* Image */
-  background-size: cover; /* Cover the entire area */
-  background-position: center; /* Center the image */
+  background: linear-gradient(to bottom, rgba(0, 7, 14, 0.95), rgba(0, 19, 32, 0.93)), /* Gradient */
+              url('/images/moodsurvey.jpg') center/cover no-repeat; /* Image */
 }
 
 /* Flex container to hold the form and the progress/suggestions side by side */
 .survey-flex-container {
   display: flex;
-  gap: 30px; /* Space between the form and progress section */
+  gap: 30px;
   width: 100%;
-  max-width: 1200px; /* Center the content with a max width */
+  max-width: 1200px; /* Max width for centered layout */
   justify-content: space-between;
+  flex-wrap: wrap; /* Responsive flexibility */
 }
 
 /* Form Section */
 .form-section {
-  flex: 1; /* Takes up available space */
-  padding: 20px;
-  background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white for contrast */
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for form */
-  border-radius: 8px; /* Rounded corners */
+  flex: 1;
+  padding: 25px;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Softer shadow */
+  border-radius: 10px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.form-section:hover {
+  transform: scale(1.02); /* Slight zoom on hover */
 }
 
 /* Form Title */
 .form-title {
   font-size: 24px;
   font-weight: bold;
-  margin-bottom: 20px;
-  color: #333;
+  margin-bottom: 15px;
+  color: #1d3557;
   text-align: center;
 }
 
 /* Form Group styling */
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 /* Label Styling */
 .form-label {
-  font-weight: bold;
-  margin-bottom: 10px;
+  font-weight: 600;
+  margin-bottom: 8px;
   display: block;
-  font-size: 16px;
-  color: #333;
+  font-size: 15px;
+  color: #1d3557;
 }
 
 /* Input and Select Styling */
 .form-control {
   width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 12px;
+  font-size: 15px;
+  border: 1px solid #b0bec5;
+  border-radius: 5px;
   outline: none;
-  background-color: #f9f9f9;
-  transition: border-color 0.3s ease-in-out;
+  background-color: #f1f3f4;
+  transition: border-color 0.3s;
 }
 
 .form-control:focus {
-  border-color: #00aaff; /* Highlighted border when focused */
+  border-color: #1e88e5; /* Highlighted border */
 }
 
 /* Description box */
 .description-box {
   resize: none; /* Prevent resizing */
-  height: 100px; /* Set height for description */
+  height: 120px; /* Increased height */
+}
+
+/* Button Container for Centering */
+.button-container {
+  display: flex;
+  justify-content: center; /* Centers the button horizontally */
+  margin-top: 15px; /* Optional: add spacing from the form inputs */
 }
 
 /* Button Styling */
-.submit-button {
-  width: 100%;
-  padding: 12px;
-  font-size: 18px;
-  font-weight: bold;
-  color: white;
-  background: linear-gradient(145deg, #1e88e5, #0d47a1); /* Gradient for button */
-  border: none;
-  border-radius: 4px;
+button {
+  background-color: #29B4AA;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
+  transition: all 0.3s ease;
+  margin: 0.5rem;
 }
 
-.submit-button:hover {
-  background: linear-gradient(145deg, #1976D2, #42A5F5); /* Darker gradient on hover */
+button:hover {
+  background-color: #ffffff;
+  color: #121212;
+  border: 2px solid #121212;
 }
 
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
 /* Progress and Suggestions Section */
 .progress-suggestions-section {
-  flex: 0.6; /* Takes up less space than the form */
-  padding: 20px;
-  background-color: rgba(255, 255, 255, 0.9); /* Background color */
-  border-radius: 8px;
+  flex: 0.6;
+  padding: 25px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  transition: transform 0.2s ease-in-out;
+}
+
+.progress-suggestions-section:hover {
+  transform: scale(1.02); /* Slight zoom on hover */
 }
 
 /* Progress Container */
 .progress-container {
   margin-bottom: 20px;
-  color: white;
+  text-align: center;
 }
 
 .progress-container h3 {
   font-size: 20px;
-  margin-bottom: 10px;
-  color:white;
+  color: white;
 }
 
 /* Suggestions Container */
 .suggestions-container {
   margin-top: 20px;
+  padding: 15px;
+  background-color: #f1f3f4;
+  border-radius: 8px;
+  width: 100%;
   text-align: center;
-  background-color: white;
 }
 
 .suggestions-container h3 {
   font-size: 20px;
-  color:white;
+  color: #1d3557;
+  margin-bottom: 10px;
 }
 
 .suggestions-container p {
   font-size: 16px;
   color: #666;
+  line-height: 1.6;
 }
 
 /* Responsive Design */
 @media screen and (max-width: 768px) {
   .survey-flex-container {
-    flex-direction: column; /* Stack the form and progress/suggestions on top of each other on small screens */
+    flex-direction: column; /* Stack form and progress/suggestions vertically */
   }
 
   .progress-suggestions-section {
-    margin-top: 20px;
-     /* Add margin between form and suggestions */
+    margin-top: 20px; /* Space between form and suggestions on mobile */
   }
 }
