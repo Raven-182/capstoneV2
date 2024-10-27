@@ -13,6 +13,7 @@ function App() {
   const [isRecording, setIsRecording] = useState(false);
   const [activeSpeaker, setActiveSpeaker] = useState(''); 
   const [transcripts, setTranscripts] = useState<TranscriptEntry[]>([]);
+  const [successMessage, setSuccessMessage] = useState('');
 
   // Reference to the end of the transcript list
   const transcriptEndRef = useRef<HTMLDivElement | null>(null);
@@ -40,9 +41,32 @@ function App() {
 
   //sending the meeting data to the main app
   const sendRecordingToMain = () => {
-    console.log('sending to main');
-    chrome.runtime.sendMessage({ action: "MeetingProcessed" });
+    const dataToSend = transcripts.map(({ speaker, transcript }) => ({ speaker, transcript }));
+    
+    const user = auth.currentUser;
+  
+    if (user) {
+      const userId = user.uid; // Get the current user's userId
+      
+      console.log('Data being sent to main app:', dataToSend);
+  
+      // Send the meeting data along with the userId to the service worker
+      chrome.runtime.sendMessage({
+        action: 'MeetingProcessed',
+        data: {
+          transcripts: dataToSend,
+          userId: userId // Include userId in the message
+        }
+      });
+  
+      // Clear the transcript and show success message
+      setTranscripts([]); 
+      setSuccessMessage('Transcripts have been sent to the main web app for analysis.');
+    } else {
+      console.error('No user is logged in.');
+    }
   };
+  
   const handleLogout = async () => {
     try {
       await signOut(auth); // Sign out the user
@@ -142,7 +166,7 @@ function App() {
       )}
   
       <button onClick={sendRecordingToMain}>Send Meeting Data to LifeLine</button>
-
+      {successMessage && <p className="success-message">{successMessage}</p>}
     </div>
   );
   
