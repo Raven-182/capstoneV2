@@ -61,6 +61,17 @@
   padding-bottom: 13px;
 }
 
+.signin-message{
+  color: #fff;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 0.5rem 1rem; /* Reduced padding */
+  height: 80%;
+  font-size: 1rem; /* Slightly reduce font size */
+  padding-bottom: 13px;
+}
+
 .nav-links:hover {
   border-bottom: 2px solid #fff;
   transition: all 0.2s ease-out;

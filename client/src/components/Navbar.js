@@ -143,7 +143,7 @@ function Navbar({ userEmail }) {
               </>
             ) : (
               <li className='nav-item'>
-                <span className='nav-links disabled-link'>Please sign in to access</span>
+                <span className='signin-message'>Please sign in to access</span>
               </li>
             )}
           </ul>
