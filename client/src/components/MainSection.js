@@ -11,7 +11,7 @@ function MainSection() {
             <h1>Boost Your Productivity</h1>
             <p>All your meetings and work items in one place!</p>
             <div className='hero-btns'>
-                <Button className='btns' buttonStyle='btn--outline' buttonSize='btn--large'>Start Here</Button>
+                <Button className='btns' buttonStyle='btn--outline' buttonSize='btn--large'>Start Working</Button>
 
             </div>
 

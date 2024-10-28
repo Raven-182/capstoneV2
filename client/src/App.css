@@ -58,15 +58,17 @@
 .react-calendar {
   width: 100% !important;
   max-width: 100% !important; 
-  background-color: white !important;
+  background-color: #0d1925 !important;
   border-radius: 8px !important;
-  padding: 10px !important;
+  padding: 30px !important;
   box-shadow: none !important;
 }
 
 /* Make weekdays and days smaller to fit */
 .react-calendar__month-view__days {
   display: grid !important;
+  padding:20px;
+  background-color: #0f3458;
   grid-template-columns: repeat(7, 1fr) !important;
   grid-auto-rows: 50px !important; /* Smaller height for each day */
   gap: 1px !important; /* Space between day tiles */
@@ -78,10 +80,15 @@
   text-align: center !important;
   font-size: 1rem !important; /* Smaller font size for weekday headings */
   font-weight: bold !important;
-  color: #666 !important;
-  background-color: #f4f4f4 !important;
+  color: #74f1ff !important;
+  background-color: #292929!important;
   padding: 5px 0 !important;
   border-bottom: 1px solid #ddd !important;
+}
+
+.react-calendar__tile:hover{
+  background-color: #17426830!important;
+  color: white!important; 
 }
 
 /* Day tiles (the individual days in the calendar) */
@@ -91,8 +98,8 @@
   align-items: center !important;
   height: 50px !important; /* Smaller height for days */
   width: auto !important;
-  background-color: white !important;
-  color: #333 !important;
+  background-color: #111b21 !important;
+  color: #18e4ff !important;
   font-size: 1rem !important; /* Smaller font for day numbers */
   border: 1px solid transparent !important;
   transition: background-color 0.3s ease, border 0.3s ease !important;
@@ -101,10 +108,11 @@
 /* Navigation buttons styling */
 .react-calendar__navigation button {
   font-size: 1.2rem !important;
-  color:#083048 !important;
+  color:#ffffff !important;
   background: none !important;
   border: none !important;
   padding: 5px !important;
+  padding-left: 10px!important;
   cursor: pointer !important;
   transition: background-color 0.3s ease !important;
   margin-bottom: 20px;
