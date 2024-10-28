@@ -117,8 +117,10 @@ export default function SignUpSignIn() {
                         </button>
                     </form>
 
+                    <p class="sigup-divider">___________________________________________</p>
+
                     <div className="toggle-form">
-                        <p>
+                        <p class="haveaccount-label">
                             {isSignUp ? "Already have an account?" : "Don't have an account?"} 
                             <button type="button" onClick={() => setIsSignUp(!isSignUp)} className="toggle-btn">
                                 {isSignUp ? "Sign In" : "Sign Up"}

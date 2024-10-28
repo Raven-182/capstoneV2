@@ -1,7 +1,6 @@
 /* Global body styling for dark theme */
 body {
-    background-color: #121212; /* Dark background for the entire page */
-    color: #ffffff; /* White text for better contrast */
+    background: linear-gradient(to bottom, rgb(0 0 0 / 98%), #12303ef0), url(/images/signup.jpeg) center / cover no-repeat;
     font-family: Arial, sans-serif; /* Set a default font */
     margin: 0; /* Remove default margin */
 }
@@ -9,10 +8,12 @@ body {
 /* Container for the sign-up/sign-in page */
 .sign-up-container {
     width: 90%;
+    margin-top:0px;
     max-width: 500px; /* Increased max width for a bigger form */
     margin: 40px auto; /* Increased margin for better spacing */
     padding: 40px; /* Increased padding for a more spacious feel */
-    background-color: #1e1e1e; /* Dark background for the form */
+    background-color: #1e1e1e00; /* Dark background for the form */
+    padding-top: 0px;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     display: flex;
@@ -23,9 +24,11 @@ body {
 /* Heading styling */
 .sign-up-title {
     text-align: center;
+    font-weight: lighter;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     font-size: 2.5rem; /* Increased font size for better visibility */
     color: #ffffff; /* White text for contrast */
-    margin-bottom: 30px; /* Increased margin for better spacing */
+    margin-bottom: 45px; /* Increased margin for better spacing */
 }
 
 /* Form styling */
@@ -42,40 +45,59 @@ body {
     font-weight: bold;
     margin-bottom: 5px;
     font-size: 1rem; /* Increased font size for better visibility */
-    color: #ffffff; /* White text for contrast */
+    color: #e0dfdf; /* White text for contrast */
 }
 
 .sign-up-form input {
     width: 100%;
-    padding: 12px; /* Increased padding for larger input */
-    border: 1px solid #ccc; /* Light border for input fields */
-    border-radius: 5px;
-    font-size: 1rem;
-    background-color: #2a2a2a; /* Dark input background */
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    padding: 14px; /* Increased padding for larger input */
+    border-radius: 15px;
+    font-size: 0.85rem;
+    border: none!important;;
+    background-color: #ffffff12; /* Dark input background */
     color: #ffffff; /* White text */
 }
 
 .sign-up-form input::placeholder {
-    color: #bbb; /* Placeholder text color */
+    color: #ffffff; /* Placeholder text color */
+    opacity: 25%;
+    font-weight: 500;
 }
 
 /* Button styling */
 .sign-up-btn, .sign-out-btn {
     width: 100%;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     padding: 12px; /* Increased padding for larger buttons */
-    background-color: #007bff; /* Button background color */
+    background-color: #0056b3; /* Button background color */
     color: white;
     font-size: 1rem;
     font-weight: bold;
     border: none;
-    border-radius: 5px;
+    border-radius: 15px;
     cursor: pointer;
     margin-top: 15px; /* Increased margin for better spacing */
     transition: background-color 0.3s ease; /* Smooth transition on hover */
 }
 
+.sigup-divider{
+    opacity: 40%;
+    font-family: 'Courier New', Courier, monospace;
+    margin-top:15px;
+    margin-bottom: 4px;;
+    color:white
+}
+
+.haveaccount-label{
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-weight: 100;
+    font-size: small;
+    color:white;
+}
+
 .sign-up-btn:hover, .sign-out-btn:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: #007bff; /* Darker blue on hover */
 }
 
 /* Toggle between sign-up and sign-in */
@@ -85,15 +107,18 @@ body {
 
 .toggle-btn {
     background: none;
+    margin-left:9px;
+    text-decoration: none!important;
+    font-size: 13px;
     border: none;
-    color: #007bff; /* Button color */
+    color: #0056b3; /* Button color */
     cursor: pointer;
     font-weight: bold;
     text-decoration: underline;
 }
 
 .toggle-btn:hover {
-    color: #0056b3; /* Darker blue on hover */
+    color: #007bff; /* Darker blue on hover */
 }
 
 /* Display signed-in user's email */
