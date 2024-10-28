@@ -404,7 +404,6 @@ h1.journals {
 
 .journal-left {
     scrollbar-width:none;
-    width: 40%;
     background: linear-gradient(to bottom, rgba(0, 15, 20, 0.674), rgba(0, 84, 121, 0.505)); /* Gradient first */
     padding: 20px;
     height: 80vh;
