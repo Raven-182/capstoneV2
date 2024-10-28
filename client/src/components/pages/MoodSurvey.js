@@ -19,6 +19,9 @@ const MoodSurvey = () => {
   const [showSuggestions, setShowSuggestions] = useState(true); // Always show suggestions
   const [previousSurveys, setPreviousSurveys] = useState([]);
   const [searchDate, setSearchDate] = useState('');
+  const [startDate, setStartDate] = useState(''); // New state for start date
+  const [endDate, setEndDate] = useState(''); // New state for end date
+
 
   const navigate = useNavigate(); 
   const user = auth.currentUser;
@@ -116,20 +119,20 @@ const MoodSurvey = () => {
 
  
   const fetchPreviousSurveys = async () => {
-    if (user && searchDate) {
+    if (user && startDate && endDate) {
       const surveysCollectionRef = collection(db, "users", user.uid, "moodSurveys");
   
       // Define start and end of the day for the search date
-      const startOfDay = new Date(searchDate);
-      startOfDay.setHours(0, 0, 0, 0); // Set to midnight of the search date
-      const endOfDay = new Date(searchDate);
-      endOfDay.setHours(23, 59, 59, 999); // Set to just before midnight of the next day
+      const start = new Date(startDate);
+      start.setHours(0, 0, 0, 0); // Set to midnight of the search date
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999); // Set to just before midnight of the next day
   
       // Query to fetch surveys with timestamp within the start and end of the specified day
       const q = query(
         surveysCollectionRef,
-        where("timestamp", ">=", startOfDay),
-        where("timestamp", "<=", endOfDay)
+        where("timestamp", ">", start),
+        where("timestamp", "<=", end)
       );
   
       const querySnapshot = await getDocs(q);
@@ -175,14 +178,21 @@ const MoodSurvey = () => {
           />
         )}
 
-        <div className="previous-surveys-section">
-          <h3 class="survey-subheading">Previous Surveys</h3>
+<div className="previous-surveys-section">
+          <h3 className="survey-subheading">Previous Surveys</h3>
+          <label>Start Date:</label>
           <input
             type="date"
-            value={searchDate}
-            onChange={(e) => setSearchDate(e.target.value)}
-          /><br></br>
-          <button class="button-survey"onClick={fetchPreviousSurveys}>Get Surveys</button>
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          /><br />
+          <label>End Date:</label>
+          <input
+            type="date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          /><br />
+          <button className="button-survey" onClick={fetchPreviousSurveys}>Get Surveys</button>
           <ul>
             {previousSurveys.map((survey, index) => (
               <li key={index}>
@@ -197,7 +207,6 @@ const MoodSurvey = () => {
     </div>
   );
 };
-
 const FormSection = ({
   dayQuality, setDayQuality,
   exerciseTime, setExerciseTime,
