@@ -1,0 +1,131 @@
+/* Dark Theme Background */
+.calendars {
+    background: linear-gradient(to bottom, rgba(0, 7, 14, 0.977), rgba(0, 19, 32, 0.936)), /* Gradient */
+              url('/images/calendar-bg.webp') center/cover no-repeat; /* Image */
+    color: #e0e7ff;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Calendar Tile */
+  .react-calendar__tile {
+    background: #ffffff;
+    color: #101d48;
+    border-radius: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .react-calendar__tile--now {
+    background: #304061;
+    color: #f0f4ff;
+    font-weight: bold;
+  }
+  
+  .react-calendar__tile--now:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(50, 50, 50, 0.8);
+  }
+  
+  .react-calendar__tile--active {
+    background: #3b4970;
+    color: #ffffff;
+    transform: scale(1.05);
+  }
+  
+  .react-calendar__tile:hover {
+    background: #243857;
+    transform: scale(1.02);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Event Indicator */
+  .event-indicator {
+    background: #5569a6;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 0.9em;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Buttons */
+  .google_loginbutton {
+    background: linear-gradient(145deg, #c92712, #b55316);
+    color: #e0e7ff;
+    padding: 12px 19px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 10px;
+    font-weight: bold;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.7), -4px -4px 8px rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+  }
+
+  .outlook_loginbutton {
+    background: linear-gradient(145deg, #2951b5, #2452b5);
+    color: #e0e7ff;
+    padding: 12px 19px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 10px;
+    font-weight: bold;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.7), -4px -4px 8px rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+  }
+
+  .react-calendar__navigation{
+    background: linear-gradient(to bottom, rgba(202, 202, 202, 0.977), rgba(255, 255, 255, 0.936));
+  }
+  
+  .google_loginbutton:hover {
+    transform: translateY(-2px);
+  }
+
+  .outlook_loginbutton:hover {
+    transform: translateY(-2px);
+  }
+  
+  /* Modal */
+  .ReactModal__Content {
+    background: linear-gradient(135deg, #1e2f4a, #283d61);
+    color: #e0e7ff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.8), -10px -10px 20px rgba(255, 255, 255, 0.05);
+  }
+
+  .form-container label{
+    color:rgb(255, 255, 255);
+  }
+  
+  .ReactModal__Content h2 {
+    color: #f6f6f672;
+  }
+  
+  .event-modal-input {
+    background: #f2f2f2!important;
+    color: #000000!important;
+    padding: 8px;
+    border-radius: 6px;
+  }
+  
+  .ReactModal__Content button {
+    background: #3b4970;
+    color: #e0e7ff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5), -3px -3px 6px rgba(255, 255, 255, 0.05);
+    transition: transform 0.2s;
+  }
+  
+  .ReactModal__Content button:hover {
+    transform: translateY(-2px);
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.6), -5px -5px 10px rgba(255, 255, 255, 0.1);
+  }
+  

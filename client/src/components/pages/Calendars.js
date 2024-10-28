@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
+import '../../App.css';
+import '../Calendar.css';
 import Modal from 'react-modal';
 import { PublicClientApplication } from '@azure/msal-browser';
 import { msalConfig, loginRequest, googleConfig } from '../../authConfig';  
 import { Client } from '@microsoft/microsoft-graph-client';  
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMicrosoft } from '@fortawesome/free-brands-svg-icons';
 import { gapi } from 'gapi-script'; // Import Google API
-import '../../App.css';
+import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 
 const msalInstance = new PublicClientApplication(msalConfig);
 
@@ -215,12 +218,21 @@ const handleCreateEvent = () => {
       
       {/* Button Container for proper alignment */}
       <div className="button-container">
-        <button onClick={signIn}>Sign in to Outlook</button>
-        {!isGoogleSignedIn ? (
-          <button onClick={handleGoogleSignIn}>Sign in to Google</button>
-        ) : (
-          <button onClick={handleGoogleSignOut}>Sign out of Google</button>
-        )}
+      <button class="outlook_loginbutton" onClick={signIn}>
+    <FontAwesomeIcon icon={faMicrosoft} style={{ marginRight: '8px' }} />
+    Sign in to Outlook
+  </button>
+  {!isGoogleSignedIn ? (
+    <button class="google_loginbutton" onClick={handleGoogleSignIn}>
+      <FontAwesomeIcon icon={faGoogle} style={{ marginRight: '8px' }} />
+      Sign in to Google
+    </button>
+  ) : (
+    <button class="google_loginbutton" onClick={handleGoogleSignOut}>
+      <FontAwesomeIcon icon={faGoogle} style={{ marginRight: '8px' }} />
+      Sign out of Google
+    </button>
+  )}
       </div>
   
       {/* Calendar container */}
@@ -241,8 +253,6 @@ const handleCreateEvent = () => {
           showNeighboringMonth={true}
         />
       </div>
-  
-      <p>Selected Date: {date.toDateString()}</p>
   
       {/* Modal for event creation or viewing event */}
       <Modal
@@ -269,6 +279,7 @@ const handleCreateEvent = () => {
       <div className="form-group">
         <label>Event Title:</label>
         <input
+          class="event-modal-input"
           type="text"
           value={eventTitle}
           onChange={(e) => setEventTitle(e.target.value)}
@@ -280,6 +291,7 @@ const handleCreateEvent = () => {
       <div className="form-group">
         <label>Event Details:</label>
         <textarea
+          class="event-modal-input"
           value={eventDetails}
           onChange={(e) => setEventDetails(e.target.value)}
           placeholder="Enter event details"
@@ -290,6 +302,7 @@ const handleCreateEvent = () => {
       <div className="form-group">
         <label>Start Time:</label>
         <input
+          class="event-modal-input"
           type="time"
           value={startTime}
           onChange={(e) => setStartTime(e.target.value)}
@@ -300,6 +313,7 @@ const handleCreateEvent = () => {
       <div className="form-group">
         <label>End Time:</label>
         <input
+          class="event-modal-input"
           type="time"
           value={endTime}
           onChange={(e) => setEndTime(e.target.value)}

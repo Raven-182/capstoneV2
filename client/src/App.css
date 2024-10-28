@@ -46,11 +46,12 @@
   width: 100% !important;
   max-width: 1000px !important; /* Set a reasonable max-width for the calendar */
   margin: 0 auto !important;
+  margin-top: 40px!important;
   padding: 10px !important;
-  background-color: white !important;
+  background-color: #00000000 !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
   border-radius: 8px !important;
-  border: 1px solid #ddd !important;
+  border: none!important;
 }
 
 /* Calendar styling tweaks to fit */
@@ -100,20 +101,14 @@
 /* Navigation buttons styling */
 .react-calendar__navigation button {
   font-size: 1.2rem !important;
-  color: #007bff !important;
+  color:#083048 !important;
   background: none !important;
   border: none !important;
   padding: 5px !important;
   cursor: pointer !important;
   transition: background-color 0.3s ease !important;
+  margin-bottom: 20px;
 }
-
-/* Adjust hover effect for buttons */
-.react-calendar__navigation button:hover {
-  background-color: #f0f8ff !important;
-  border-radius: 50% !important;
-}
-
 
 /* Event indicator */
 /* Event indicator icon for events */
@@ -150,15 +145,15 @@
   margin-top: 5px;
   font-family: 'Courier New', Courier, monospace;
   font-size: 0.9rem;
-  color: #d6d6d6;
+  color: #000000;
 }
 
 .form-group input, .form-group textarea {
   padding: 10px;
   border-radius: 5px;
-  border: 0.9px solid #ccc;
+  outline: none!important;
+  color: lightblue;
   font-weight:bold;
-  font-family: 'Courier New', Courier, monospace;
   font-size: 0.9rem;
 }
 
@@ -187,11 +182,11 @@
 }
 
 .form-buttons button:last-child {
-  background-color: #6c757d;
+  background-color: #a10303a6;
 }
 
 .form-buttons button:last-child:hover {
-  background-color: #5a6268;
+  background-color: #ff0000ad;
 }
 
 

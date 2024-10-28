@@ -236,7 +236,7 @@ const FormSection = ({
           onChange={(e) => setExtraDetails(e.target.value)}
         />
       </div>
-      <div class="button-container">
+      <div>
         <button className="submit-button-moodsurvey" type="submit">
           Analyze Mood
         </button>
