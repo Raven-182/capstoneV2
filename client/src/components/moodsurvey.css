@@ -190,6 +190,7 @@ input[type="date"]::placeholder {
   margin-top: 165px;
   margin-bottom: 45px;
   font-size:1.3em;
+  color:white;
 }
 
 .submit-button-moodsurvey:hover {

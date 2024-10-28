@@ -112,6 +112,8 @@ function Navbar({ userEmail }) {
     }
   };
 
+  if (!userEmail) return null;
+
   return (
     <>
       <nav className='navbar'>

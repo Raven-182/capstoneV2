@@ -29,16 +29,26 @@ export default function Calendars() {
   const [isViewingEvent, setIsViewingEvent] = useState(false);  // Track if viewing an event or creating one
 
   // Custom modal styles
-  const customStyles = {
-    content: {
-      top: '50%',
-      left: '50%',
-      right: 'auto',
-      bottom: 'auto',
-      marginRight: '-50%',
-      transform: 'translate(-50%, -50%)',
-    },
-  };
+  // Custom modal styles with dark overlay
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginTop:'50px',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    backgroundColor: 'white',
+    padding: '20px',
+    borderRadius: '8px',
+    width: '80%',
+    maxWidth: '500px',
+  },
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Darken background with opacity
+  },
+};
 
   // Sign in to Outlook
   const signIn = async () => {
@@ -273,7 +283,6 @@ const handleCreateEvent = () => {
     </div>
   ) : (
     <div className="create-event-form">
-      <h2>Create Event for {date.toDateString()}</h2>
 
       {/* Event Title */}
       <div className="form-group">

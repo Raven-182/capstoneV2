@@ -7,6 +7,10 @@
   h1 {
     text-align: center;
   }
+
+.ourservices-label{
+  color:white;
+}
   
   .cards__container {
     display: flex;

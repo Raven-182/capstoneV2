@@ -147,7 +147,7 @@
   gap: 5px; /* Space between label and input */
 }
 
-.form-group label {
+.form-group label{
   font-weight: normal;
   margin-top: 5px;
   font-family: 'Courier New', Courier, monospace;
@@ -217,3 +217,17 @@
   padding: 20px; /* Add padding to create space around the cards */
   box-sizing: border-box; /* Include padding in the height calculation */
 }
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full height of the viewport */
+  background-color: #000000; /* Match your app's background */
+}
+
+.loading-spinner {
+  font-size: 24px; /* Adjust size as needed */
+  color: #333; /* Adjust color as needed */
+}
+
