@@ -201,7 +201,7 @@
 }
 
 .meetings {
-  background-image: linear-gradient(rgba(1, 27, 25, 0.76), rgba(0, 0, 0, 0.829)), url('/images/MeetingBG.jpeg');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.829), rgba(1, 27, 25, 0.86)), url(/images/MeetingBG.jpeg);
   background-position: center;
   background-size: cover;
   height: 100%;

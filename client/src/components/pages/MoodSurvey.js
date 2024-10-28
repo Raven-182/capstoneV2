@@ -182,7 +182,7 @@ const MoodSurvey = () => {
             value={searchDate}
             onChange={(e) => setSearchDate(e.target.value)}
           />
-          <button onClick={fetchPreviousSurveys}>Fetch Surveys</button>
+          <button class="button-survey"onClick={fetchPreviousSurveys}>Fetch Surveys</button>
           <ul>
             {previousSurveys.map((survey, index) => (
               <li key={index}>

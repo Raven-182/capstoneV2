@@ -421,7 +421,7 @@ h1.journals {
 .filter-buttons {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .filter-buttons button {
@@ -434,6 +434,7 @@ h1.journals {
     cursor: pointer;
     border-radius: 5px;
     transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s;
+    margin-right: 2px;
 }
 
 .filter-buttons button:hover {
@@ -446,7 +447,6 @@ h1.journals {
     width: 100%;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding: 10px;
-    margin-bottom: 20px;
     border-radius: 5px;
     border: none;
     background-color: #3e6ea54b;

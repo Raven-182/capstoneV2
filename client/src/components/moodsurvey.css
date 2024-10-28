@@ -85,7 +85,7 @@
 }
 
 /* Button Styling */
-button {
+.button-survey {
   background-color: #29B4AA;
   color: #ffffff;
   border: 2px solid #ffffff;
@@ -97,13 +97,13 @@ button {
   margin: 0.5rem;
 }
 
-button:hover {
+.button-survey:hover {
   background-color: #ffffff;
   color: #121212;
   border: 2px solid #121212;
 }
 
-button:disabled {
+.button-survey:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
