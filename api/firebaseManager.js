@@ -26,6 +26,68 @@ function writeMeetingData(userId, meetingData) {
     });
 }
 
+// post meeting data pricessed
+function putProcessedMeetingData(userId, meetingId, processedData) {
+  const db = getDatabase();
+  const meetingRef = db.ref('users/' + userId + '/processedMeetings').push(); // Create a unique reference
+
+  // Add a timestamp to the processed data
+  const dataWithTimestamp = {
+    ...processedData,
+    timestamp: new Date().toISOString(), // Add current timestamp in ISO format
+  };
+
+
+  return meetingRef.set(dataWithTimestamp)
+    .then(() => {
+      console.log("Processed meeting data saved successfully.");
+      return { success: true, meetingId: meetingRef.key }; // Return success and the unique key
+    })
+    .catch((error) => {
+      console.error("Error writing processed meeting data:", error);
+      return { success: false, error: error.message }; // Return error details
+    });
+}
+//read specific processed data
+
+// Read specific processed meeting data
+function getProcessedMeetingData(userId, meetingId) {
+  const db = getDatabase();
+  const meetingRef = db.ref('users/' + userId + '/processedMeetings/' + meetingId);
+
+  return meetingRef.get()
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        return { success: true, data: snapshot.val() };
+      } else {
+        return { success: false, message: "No processed meeting data found." };
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching processed meeting data:", error);
+      return { success: false, error: error.message };  
+    });
+}
+
+
+// Get all processed meeting data for a user
+async function getAllProcessedMeetingData(userId) {
+  const db = getDatabase();
+  const processedMeetingsRef = db.ref('users/' + userId + '/processedMeetings');
+
+  try {
+    const snapshot = await processedMeetingsRef.get();
+    if (snapshot.exists()) {
+      return { success: true, data: snapshot.val() }; // Return all processed meeting data
+    } else {
+      return { success: false, message: "No processed meetings found." };
+    }
+  } catch (error) {
+    console.error("Error fetching processed meetings data:", error);
+    return { success: false, error: error.message };  
+  }
+}
+
 
 // Read specific meeting data
 function getMeetingData(userId, meetingId) {
@@ -227,5 +289,5 @@ module.exports = {
   updateMoodSurveyData, 
   deleteMoodSurveyData, 
   getAllMoodSurveyData,
-  writeMeetingData, getMeetingData, updateMeetingData, deleteMeetingData, getAllMeetingData 
+  writeMeetingData, getMeetingData, updateMeetingData, deleteMeetingData, getAllMeetingData, putProcessedMeetingData, getAllProcessedMeetingData, getProcessedMeetingData
 };
