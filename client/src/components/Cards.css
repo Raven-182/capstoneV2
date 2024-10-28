@@ -1,7 +1,8 @@
 .cards {
-    padding: 4rem;
-    background: #ede9e9;
-  }
+  padding: 4rem;
+  background: linear-gradient(to bottom, #07171fd9, #0d171d);
+}
+
   
   h1 {
     text-align: center;

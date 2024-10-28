@@ -146,16 +146,20 @@
 }
 
 .form-group label {
-  font-weight: bold;
-  font-size: 1rem;
-  color: #333;
+  font-weight: normal;
+  margin-top: 5px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+  color: #d6d6d6;
 }
 
 .form-group input, .form-group textarea {
   padding: 10px;
   border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
+  border: 0.9px solid #ccc;
+  font-weight:bold;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
 }
 
 .form-group input[type="time"] {

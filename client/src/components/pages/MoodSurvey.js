@@ -12,11 +12,11 @@ const MoodSurvey = () => {
   const [exerciseTime, setExerciseTime] = useState('no');
   const [mealsCount, setMealsCount] = useState('one');
   const [extraDetails, setExtraDetails] = useState('');
-  const [moodScore, setMoodScore] = useState(null);
-  const [suggestions, setSuggestions] = useState('');
+  const [moodScore, setMoodScore] = useState(0);
+  const [suggestions, setSuggestions] = useState('No suggestions for tomorrow.'); // Default suggestions
   const [backgroundColor, setBackgroundColor] = useState('');
-  const [sectionBackgroundColor, setSectionBackgroundColor] = useState('');
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [sectionBackgroundColor, setSectionBackgroundColor] = useState('rgb(38 50 58 / 28%)');
+  const [showSuggestions, setShowSuggestions] = useState(true); // Always show suggestions
   const [previousSurveys, setPreviousSurveys] = useState([]);
   const [searchDate, setSearchDate] = useState('');
 
@@ -176,13 +176,13 @@ const MoodSurvey = () => {
         )}
 
         <div className="previous-surveys-section">
-          <h3>Search Previous Surveys</h3>
+          <h3 class="survey-subheading">Previous Surveys</h3>
           <input
             type="date"
             value={searchDate}
             onChange={(e) => setSearchDate(e.target.value)}
-          />
-          <button class="button-survey"onClick={fetchPreviousSurveys}>Fetch Surveys</button>
+          /><br></br>
+          <button class="button-survey"onClick={fetchPreviousSurveys}>Get Surveys</button>
           <ul>
             {previousSurveys.map((survey, index) => (
               <li key={index}>
@@ -237,7 +237,7 @@ const FormSection = ({
         />
       </div>
       <div class="button-container">
-        <button className="submit-button" type="submit">
+        <button className="submit-button-moodsurvey" type="submit">
           Analyze Mood
         </button>
       </div>
@@ -258,32 +258,36 @@ const FormGroup = ({ label, value, onChange, options }) => (
   </div>
 );
 
-const ProgressSection = ({ moodScore, suggestions, sectionBackgroundColor, getMoodEmoji }) => (
-  <div className="progress-suggestions-section" style={{ backgroundColor: sectionBackgroundColor }}>
-    {moodScore !== null && (
+const ProgressSection = ({ moodScore, suggestions, sectionBackgroundColor, getMoodEmoji }) => {
+  const value = moodScore > 0 ? Math.min(moodScore, 10) : 0; // Ensure value is between 0 and 10
+
+  return (
+    <div className="progress-suggestions-section" style={{ backgroundColor: sectionBackgroundColor }}>
       <div className="progress-container">
         <h3>Your Mood Score</h3>
         <CircularProgressbar
-          value={Math.abs(moodScore)}
-          text={`${moodScore}`}
+          value={value} // Ensure value is properly set
+          text={`${value}`} // Display the value as text
           maxValue={10}
-          minValue={-10}
+          minValue={0} // Ensure minimum value is 0
           styles={buildStyles({
-            pathColor: moodScore > 0 ? 'rgba(75, 192, 192, 0.8)' : 'rgba(255, 99, 132, 0.8)',
+            pathColor: value > 0 ? 'rgba(75, 192, 192, 0.8)' : 'rgba(255, 99, 132, 0.8)', // Change color based on score
             textColor: 'white',
             trailColor: 'white',
           })}
         />
         <div className="mood-emoji" style={{ fontSize: '2rem', marginTop: '10px' }}>
-          {getMoodEmoji(moodScore > 0 ? 'positive' : moodScore === 0 ? 'neutral' : 'negative')}
+          {getMoodEmoji(value > 0 ? 'positive' : value === 0 ? 'neutral' : 'negative')}
         </div>
       </div>
-    )}
-    <div className="suggestions-container">
-      <h3>Suggestions for Tomorrow</h3>
-      <p>{suggestions}</p>
+      <div className="suggestions-container">
+        <h3>Suggestions for Tomorrow</h3>
+        <p>{suggestions}</p>
+      </div>
     </div>
-  </div>
-);
+  );
+};
+
+
 
 export default MoodSurvey;

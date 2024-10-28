@@ -4,8 +4,8 @@
   justify-content: center;
   padding: 20px;
   min-height: 100vh; /* Full viewport height */
-  background: linear-gradient(to bottom, rgba(0, 7, 14, 0.95), rgba(0, 19, 32, 0.93)), /* Gradient */
-              url('/images/moodsurvey.jpg') center/cover no-repeat; /* Image */
+  background: linear-gradient(to bottom, rgba(0, 7, 14, 0.977), rgba(0, 19, 32, 0.936)), /* Gradient */
+              url('/images/moodSurveyBG.jpg') center/cover no-repeat; /* Image */
 }
 
 /* Flex container to hold the form and the progress/suggestions side by side */
@@ -20,24 +20,24 @@
 
 /* Form Section */
 .form-section {
-  flex: 1;
-  padding: 25px;
-  background-color: rgba(255, 255, 255, 0.9);
+  padding-left: 55px;
+  padding-right: 55px;
+  padding-top:10px;
+  padding-bottom: 45px;
+  background: linear-gradient(to bottom, rgba(0, 15, 20, 0.674), rgba(0, 84, 121, 0.505)); /* Dark blue to lighter blue */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Softer shadow */
   border-radius: 10px;
   transition: transform 0.2s ease-in-out;
 }
 
-.form-section:hover {
-  transform: scale(1.02); /* Slight zoom on hover */
-}
 
 /* Form Title */
 .form-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 15px;
-  color: #1d3557;
+  font-size: 22px;
+  font-weight:bold;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  margin-bottom: 38px;
+  color:rgb(164 201 218);
   text-align: center;
 }
 
@@ -58,8 +58,9 @@
 /* Input and Select Styling */
 .form-control {
   width: 100%;
-  padding: 12px;
-  font-size: 15px;
+  padding: 6px;
+  font-size: 0.9em;
+  font-weight: 100;
   border: 1px solid #b0bec5;
   border-radius: 5px;
   outline: none;
@@ -86,11 +87,11 @@
 
 /* Button Styling */
 .button-survey {
-  background-color: #29B4AA;
+  background-color: #28455ebf;
   color: #ffffff;
   border: 2px solid #ffffff;
   border-radius: 8px;
-  padding: 0.75rem 2rem;
+  padding: 0.75rem 1.5rem;
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -111,7 +112,7 @@
 /* Progress and Suggestions Section */
 .progress-suggestions-section {
   flex: 0.6;
-  padding: 25px;
+  padding: 20px 55px 0px 55px;
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 10px;
   display: flex;
@@ -121,19 +122,87 @@
   transition: transform 0.2s ease-in-out;
 }
 
-.progress-suggestions-section:hover {
-  transform: scale(1.02); /* Slight zoom on hover */
-}
 
 /* Progress Container */
 .progress-container {
   margin-bottom: 20px;
   text-align: center;
+
 }
+
+.submit-button-moodsurvey {
+  margin-top: 20px;
+  margin-bottom: -25px;
+  border: none;
+  color: #fff; /* Change text color to white for better contrast */
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(135deg, #24445fb5, #004dc117); /* Gradient background */
+  border-radius: 12px; /* Rounded corners */
+  font-weight: 500;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 16px; /* Increased font size */
+  text-align: center; /* Centered text */
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3), /* Outer shadow for 3D effect */
+              0 3px 6px rgba(0, 0, 0, 0.2); /* Inner shadow for depth */
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+input[type="date"] {
+  font-size: 14px;
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  background-color: #2d2d2d;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 3px rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  font-family: 'Arial', sans-serif;
+  cursor: pointer;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(1);
+}
+
+input[type="date"]:hover {
+  background-color: #4e4e4e;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6), inset 0 2px 5px rgba(255, 255, 255, 0.1);
+}
+
+input[type="date"]:focus {
+  background-color: #5c5c5c;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.8), inset 0 3px 8px rgba(255, 255, 255, 0.2);
+}
+
+input[type="date"]::placeholder {
+  color: #b3b3b3;
+}
+
+
+.survey-subheading{
+  margin-right: 50px;
+  margin-top: 23px;
+  margin-bottom: 45px;
+  font-size:1.3em;
+}
+
+.submit-button-moodsurvey:hover {
+  background: linear-gradient(135deg, #14366b, #0e3d66); /* Reverse gradient on hover */
+  transform: translateY(-2px); /* Slight lift effect */
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.4), /* Enhanced shadow on hover */
+              0 4px 8px rgba(0, 0, 0, 0.3); /* Enhanced inner shadow on hover */
+}
+
 
 .progress-container h3 {
   font-size: 20px;
   color: white;
+  margin-bottom: 25px;
 }
 
 /* Suggestions Container */
