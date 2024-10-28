@@ -65,7 +65,7 @@ const SurveyHistory = () => {
       ) : (
         <p>No previous surveys found.</p>
       )}
-      <Link to="/moodsurvey">Back to Mood Survey</Link>
+      <Link to="/moodsurvey" className="back-link">Back to Mood Survey</Link>
     </div>
   );
 };

@@ -1,71 +1,314 @@
-/* SurveyHistory CSS */
+/* Main page container */
+.survey-page-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  min-height: 100vh; /* Full viewport height */
+  background: linear-gradient(to bottom, rgba(0, 7, 14, 0.977), rgba(0, 19, 32, 0.936)), /* Gradient */
+              url('/images/moodSurveyBG.webp') center/cover no-repeat; /* Image */
+}
+
+/* Flex container to hold the form and the progress/suggestions side by side */
+.survey-flex-container {
+  display: flex;
+  gap: 30px;
+  width: 100%;
+  max-width: 1200px; /* Max width for centered layout */
+  justify-content: space-between;
+  flex-wrap: wrap; /* Responsive flexibility */
+}
+
+/* Form Section */
+.form-section {
+  padding-left: 55px;
+  padding-right: 55px;
+  padding-top: 35px;
+  padding-bottom: 45px;
+  background: linear-gradient(to bottom, rgba(0, 15, 20, 0.674), rgba(0, 84, 121, 0.505)); /* Dark blue to lighter blue */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Softer shadow */
+  border-radius: 10px;
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Form Title */
+.form-title {
+  font-size: 22px;
+  font-weight: bold;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  margin-bottom: 38px;
+  color: rgb(164, 201, 218);
+  text-align: center;
+}
+
+/* Form Group styling */
+.form-group {
+  margin-bottom: 15px;
+}
+
+/* Label Styling */
+.form-label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+  font-size: 15px;
+  color: #1d3557;
+}
+
+/* Input and Select Styling */
+.form-control {
+  width: 100%;
+  padding: 6px;
+  font-size: 0.9em;
+  color: lightblue;
+  font-weight: 100;
+  border-radius: 5px;
+  outline: none;
+  background-color: #2d2d2d;
+  transition: border-color 0.3s;
+}
+
+.form-control:focus {
+  border-color: #1e88e5; /* Highlighted border */
+}
+
+/* Description box */
+.description-box {
+  resize: none; /* Prevent resizing */
+  height: 120px; /* Increased height */
+}
+
+/* Button Container for Centering */
+.button-container {
+  display: flex;
+  justify-content: center; /* Centers the button horizontally */
+  margin-top: 25px; /* Optional: add spacing from the form inputs */
+}
+
+/* Button Styling */
+.button-survey {
+  background-color: #28455ebf;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0.5rem;
+}
+
+.button-survey:hover {
+  background-color: #ffffff;
+  color: #121212;
+  border: 2px solid #121212;
+}
+
+.button-survey:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Progress and Suggestions Section */
+.progress-suggestions-section {
+  flex: 0.6;
+  padding: 20px 55px 0px 55px;
+  background-color: rgba(255, 255, 255, 0.9);
+  margin-top: 18px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Progress Container */
+.progress-container {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.submit-button-moodsurvey {
+  margin-top: 30px!important;
+  margin-bottom: 20px!important;
+  border: none!important;
+  color: #fff!important; /* Change text color to white for better contrast */
+  width: 100%!important;
+  padding: 10px!important;
+  background: linear-gradient(135deg, #5a80a1b5, #ffffff17) !important; /* Gradient background */
+  border-radius: 12px!important; /* Rounded corners */
+  font-weight: 500!important;
+  font-family: 'Courier New', Courier, monospace!important;
+  font-size: 16px!important; /* Increased font size */
+  text-align: center!important;/* Centered text */
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3), /* Outer shadow for 3D effect */
+              0 3px 6px rgba(0, 0, 0, 0.2)!important; /* Inner shadow for depth */
+  transition: all 0.3s ease!important; /* Smooth transition for hover effects */
+  cursor: pointer!important; /* Pointer cursor on hover */
+}
+
+input[type="date"] {
+  font-size: 14px;
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  background-color: #2d2d2d;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 3px rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  font-family: 'Arial', sans-serif;
+  cursor: pointer;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(1);
+}
+
+input[type="date"]:hover {
+  background-color: #4e4e4e;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6), inset 0 2px 5px rgba(255, 255, 255, 0.1);
+}
+
+input[type="date"]:focus {
+  background-color: #5c5c5c;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.8), inset 0 3px 8px rgba(255, 255, 255, 0.2);
+}
+
+input[type="date"]::placeholder {
+  color: #b3b3b3;
+}
+
+.survey-subheading {
+  margin-right: 50px;
+  margin-top: 165px;
+  margin-bottom: 45px;
+  font-size: 1.3em;
+}
+
+.submit-button-moodsurvey:hover {
+  background: linear-gradient(135deg, #5a80a1f2, #03c8ff57) !important; /* Reverse gradient on hover */
+  transform: translateY(-2px)!important;  /* Slight lift effect */
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.4), /* Enhanced shadow on hover */
+              0 4px 8px rgba(0, 0, 0, 0.3)!important;  /* Enhanced inner shadow on hover */
+}
+
+.progress-container h3 {
+  font-size: 20px;
+  color: white;
+  margin-bottom: 25px;
+}
+
+/* Suggestions Container */
+.suggestions-container {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f1f3f4;
+  border-radius: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+.suggestions-container h3 {
+  font-size: 20px;
+  color: #1d3557;
+  margin-bottom: 10px;
+}
+
+.suggestions-container p {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* Survey History CSS */
 .survey-history-container {
     max-width: 900px;
     margin: 2rem auto;
     padding: 1.5rem;
-    background-color: #f9f9f9;
+    background-color: rgba(42, 51, 64, 0.9); /* Updated for background tile effect */
     border-radius: 8px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     font-family: Arial, sans-serif;
     color: #333;
-  }
-  
-  .survey-history-container h2 {
+}
+
+.survey-history-container h2 {
     font-size: 1.8rem;
     margin-bottom: 1.5rem;
     text-align: center;
-    color: #333;
-  }
-  
-  .survey-history-table {
+    color:rgb(164, 201, 218); /* Text color for better contrast */
+}
+
+.survey-history-table {
     width: 100%;
     border-collapse: collapse;
-  }
-  
-  .survey-history-table th,
-  .survey-history-table td {
-    padding: 0.75rem 1rem;
+    margin-bottom: 30px;
+}
+
+.survey-history-table th,
+.survey-history-table td {
+    padding: 0.75rem;
     text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .survey-history-table th {
-    background-color: #4a90e2;
-    color: white;
-    font-weight: 600;
-    font-size: 0.95rem;
-  }
-  
-  .survey-history-table tr:hover {
-    background-color: #f1f1f1;
-  }
-  
-  .survey-history-table td {
-    font-size: 0.9rem;
-    color: #555;
-  }
-  
-  .delete-button {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 0.5rem 0.8rem;
-    font-size: 0.85rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  
-  .delete-button:hover {
-    background-color: #c0392b;
-  }
-  
-  a {
-    display: inline-block;
-    margin-top: 1rem;
-    text-decoration: none;
-    color: #4a90e2;
-    font-weight: 500;
-  }
-  
-  
+}
+
+.survey-history-table th {
+    background-color: rgba(26, 32, 40, 0.8);
+    color: rgb(164, 201, 218); /* Text color for better contrast */
+}
+
+.survey-history-table tr:nth-child(even) {
+    background-color: rgba(48, 56, 64, 0.5);
+}
+
+.survey-history-table tr:hover {
+    background-color: rgba(64, 73, 81, 0.6); /* Hover effect */
+}
+
+.survey-history-table td {
+    color: #eaeaea; /* Slightly brighter for better readability */
+}
+
+.back-link {
+  color: rgb(216, 154, 110); /* Set text color to white */
+  text-decoration: none; /* Remove underline */
+  font-weight: bold; /* Optional: make the text bold */
+}
+
+.back-link:hover {
+  color: chocolate; /* Optional: change color on hover */
+}
+
+.delete-button{
+  padding:8px 22px;
+  color:white;
+  background-color: rgba(107, 50, 50, 0.836);
+  border: none;
+  border-radius: 2px;
+}
+
+.delete-button:hover{
+  background-color: rgba(141, 26, 26, 0.836);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .survey-flex-container {
+        flex-direction: column;
+    }
+    
+    .form-section {
+        padding: 20px;
+    }
+    
+    .progress-suggestions-section {
+        width: 100%;
+        margin-top: 20px;
+    }
+    
+    .form-title {
+        font-size: 20px;
+    }
+}
