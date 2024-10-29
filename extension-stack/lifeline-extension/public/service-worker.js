@@ -1,3 +1,6 @@
+
+let meetingConfig = undefined;
+
 chrome.sidePanel
   .setPanelBehavior({ openPanelOnActionClick: true })
   .catch((error) => console.error(error));
@@ -12,8 +15,10 @@ async function sendMeetingDataToServer(transcripts, userId) {
         speaker,
         transcript,
       })),
+      meetingTopic: meetingConfig ? meetingConfig.meetingTopic : 'Not found',
+      url: meetingConfig ? meetingConfig.baseUrl : 'Not found',               
+      email: meetingConfig ? meetingConfig.userEmail : 'Not found',            
     };
-
     try {
 
       const response = await fetch(`http://localhost:9000/api/meeting/${userId}`, {
@@ -41,5 +46,17 @@ chrome.runtime.onMessage.addListener((message) => {
   if (message.action === 'MeetingProcessed' && message.data) {
     const { transcripts, userId } = message.data; // Extract userId from message
     sendMeetingDataToServer(transcripts, userId);
+  } else if (message.action == "UpdateMetadata") {
+    if (meetingConfig == undefined){
+
+    meetingConfig = message.metadata;
+
+    // Extracting the meeting topic
+    const meetingTopic = meetingConfig.meetingTopic;
+    const url = meetingConfig.baseUrl
+    const email = meetingConfig.userEmail
+    console.log("Meeting data from the service worker", meetingTopic)
+
+    }
   }
 });

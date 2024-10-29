@@ -20,7 +20,7 @@
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "morgan": "~1.9.1",
-    "openai": "^4.67.2",
+    "openai": "^4.68.4",
     "sentiment": "^5.0.2"
   },
   "devDependencies": {

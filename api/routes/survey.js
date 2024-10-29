@@ -50,19 +50,19 @@ function createPrompt(dayQuality, exerciseTime, mealsCount, extraDetails) {
   let prompt = `User's day was described as: "${dayQuality}".\n\n`;
 
   if (exerciseTime === 'no') {
-    prompt += `\n**Exercise Suggestions:**\nThey did not exercise today. Suggest a simple exercise routine they could try tomorrow.\n\n`;
+    prompt += `\nExercise Suggestions:\nThey did not exercise today. Suggest a simple exercise routine they could try tomorrow.\n\n`;
   }
 
   if (mealsCount === 'one') {
-    prompt += `\n**Diet Suggestions:**\nThey had only one meal today. Suggest healthy meals to improve their diet.\n\n`;
+    prompt += `\n1.Diet Suggestions:\nThey had only one meal today. Suggest healthy meals to improve their diet.\n\n`;
   } else if (mealsCount === 'two') {
-    prompt += `\n**Diet Suggestions:**\nThey had two meals today. Suggest one more healthy meal they could add.\n\n`;
+    prompt += `\nDiet Suggestions:\nThey had two meals today. Suggest one more healthy meal they could add.\n\n`;
   } else if (mealsCount === 'three') {
-    prompt += `\n**Diet Suggestions:**\nThey had three meals today. Good job, but remind them to eat wisely.\n\n`;
+    prompt += `\nDiet Suggestions:\nThey had three meals today. Good job, but remind them to eat wisely.\n\n`;
   }
 
   if (extraDetails) {
-    prompt += `\n**Extra Details:**\nAdditional details: "${extraDetails}".\n\n`;
+    prompt += `\nExtra Details:\nAdditional details: "${extraDetails}".\n\n`;
   }
 
   prompt += `\nProvide suggestions for improving their mood and health tomorrow.`;
@@ -71,7 +71,7 @@ function createPrompt(dayQuality, exerciseTime, mealsCount, extraDetails) {
 }
 
 /**
- * Function to fetch suggestions from OpenAI API
+ * Function to fetch suggestions from OpenAI API and limit to 3 lines
  */
 async function fetchSuggestionsFromOpenAI(prompt) {
   try {
@@ -79,7 +79,15 @@ async function fetchSuggestionsFromOpenAI(prompt) {
       model: 'gpt-3.5-turbo',
       messages: [{ role: 'user', content: prompt }],
     });
-    return response.choices[0].message.content;
+    
+    // Get the response content
+    let content = response.choices[0].message.content;
+
+    // Limit to the first 3 lines using regex
+    const lines = content.split('\n').filter(line => line.trim() !== ''); // Remove empty lines
+    const limitedContent = lines.slice(0, 3).join('\n'); // Get only the first 3 lines
+    
+    return limitedContent;
   } catch (error) {
     console.error('Error with OpenAI API:', error);
     return 'Sorry, I couldn’t generate suggestions at the moment.';
