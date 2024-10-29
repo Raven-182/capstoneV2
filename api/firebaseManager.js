@@ -27,7 +27,7 @@ function writeMeetingData(userId, meetingData) {
 }
 
 // post meeting data pricessed
-function putProcessedMeetingData(userId, meetingId, processedData) {
+function putProcessedMeetingData(userId, processedData) {
   const db = getDatabase();
   const meetingRef = db.ref('users/' + userId + '/processedMeetings').push(); // Create a unique reference
 
@@ -36,6 +36,7 @@ function putProcessedMeetingData(userId, meetingId, processedData) {
     ...processedData,
     timestamp: new Date().toISOString(), // Add current timestamp in ISO format
   };
+  console.log("date with timestamp", dataWithTimestamp)
 
 
   return meetingRef.set(dataWithTimestamp)

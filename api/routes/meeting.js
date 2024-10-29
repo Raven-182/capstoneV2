@@ -74,13 +74,20 @@ async function processMeetingTranscript(transcripts) {
   }
 }
 
-function formatProcessedData(processedData) {
+function formatProcessedData(processedData, meetingData) {
   return {
     keyDecisions: processedData.keyDecisions.split('\n').filter(item => item.trim() !== ''),
     workItems: processedData.workItems.split('\n').filter(item => item.trim() !== ''),
     meetingMinutes: processedData.meetingMinutes.split('\n').filter(item => item.trim() !== ''),
+    email: meetingData.email ? meetingData.email : 'Not found',
+    meetingTopic: meetingData.meetingTopic ? meetingData.meetingTopic : 'Not Found' ,
+    url: meetingData.url ? meetingData.url: 'Not found',
+    transcript: meetingData.transcripts
+
   };
 }
+
+//write a meeting
 
 router.post('/:userId', async function(req, res) {
   const userId = req.params.userId;
@@ -95,10 +102,10 @@ router.post('/:userId', async function(req, res) {
       const processedData = await processMeetingTranscript(meetingData.transcripts); 
       console.log("Processed"+processedData)
       //format it 
-      const formattedData = formatProcessedData(processedData);
+      const formattedData = formatProcessedData(processedData, meetingData);
       console.log(formattedData);
       // Save the processed data to Firebase
-      const processedResult = await putProcessedMeetingData(userId, result.meetingId, formattedData);
+      const processedResult = await putProcessedMeetingData(userId, formattedData);
       console.log(processedResult)
 
       if (processedResult.success) {
