@@ -130,7 +130,8 @@ h1.journals {
 
 .save-reco{
     margin-top:50px!important;
-    margin-left: 147px;
+    margin-left: 175px;
+    width: 400px;
 }
 
 .start-reco, .stop-reco, .save-reco{

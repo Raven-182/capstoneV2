@@ -272,14 +272,14 @@ const handleCreateEvent = () => {
   contentLabel={isViewingEvent ? "View Event" : "Create Event"}
 >
   {isViewingEvent && selectedEvent ? (
-    <div>
-      <h2>Event Details</h2>
+    <div className = "event-popup">
+      <h2 style = {{color:"black"}}>Event Details</h2>
       <p><strong>Title:</strong> {selectedEvent.title}</p>
       <p><strong>Date:</strong> {new Date(selectedEvent.start).toLocaleDateString()}</p>
       <p><strong>Start Time:</strong> {new Date(selectedEvent.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
       <p><strong>End Time:</strong> {new Date(selectedEvent.end).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
       <p><strong>Details:</strong> {selectedEvent.details || "No details provided"}</p>
-      <button onClick={() => setModalIsOpen(false)}>Close</button>
+      <button onClick={() => setModalIsOpen(false)} >Close</button>
     </div>
   ) : (
     <div className="create-event-form">

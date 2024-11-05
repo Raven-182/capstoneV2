@@ -49,15 +49,58 @@ function App() {
           element={userEmail ? <Home /> : <Navigate to="/sign-up" />}
         />
         <Route path="/sign-up" element={<SignUp />} />
-        {/* <Route path="/meetingsdetails" element={<MeetingsDetails />} /> */}
-        <Route path="/meetingsdetails/:meetingId" element={<MeetingsDetails />} />
-        <Route path="/survey-history" element={<SurveyHistory />} />
-        <Route path="/moodsurvey" element={<MoodSurvey />} />
+        <Route path="/home" element={<Home />} />
+        <Route
+          path="/calendars"
+          element={
+            <ProtectedRoute user={userEmail}>
+              <Calendars />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notes"
+          element={
+            <ProtectedRoute user={userEmail}>
+              <Meetings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/journals"
+          element={
+            <ProtectedRoute user={userEmail}>
+              <Journal />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/meetingsdetails/:meetingId"
+          element={
+            <ProtectedRoute user={userEmail}>
+              <MeetingsDetails />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/survey-history"
+          element={
+            <ProtectedRoute user={userEmail}>
+              <SurveyHistory />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/moodsurvey"
+          element={
+            <ProtectedRoute user={userEmail}>
+              <MoodSurvey />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );
 }
 
 export default App;
-
-

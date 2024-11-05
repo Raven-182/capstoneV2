@@ -13,6 +13,9 @@
     border-radius: 8px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
+  .event-popup {
+     color :#101d48 !important;
+  }
   
   .react-calendar__tile--now {
     background: #304061;

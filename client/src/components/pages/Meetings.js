@@ -9,7 +9,7 @@ export default function Meetings() {
   const [loading, setLoading] = useState(true);  
   const [error, setError] = useState(null); // State for error message
   const navigate = useNavigate(); // Hook for navigation
-
+ const imageLinks = ["./images/meet1.jpeg", "./images/meet2.jpeg", "./images/meet3.jpeg", "./images/meet4.jpeg", "./images/meet5.jpeg", "./images/meet6.jpeg"]
   useEffect(() => {
     // Fetch meetings when the component mounts
     const fetchMeetings = async () => {
@@ -65,12 +65,13 @@ export default function Meetings() {
   return (
     <div className="meetings">
       <div className="meetings-container">
+
         {meetings.map(([meetingId, meetingDetails]) => (
           
           <MeetingCard
             key={meetingId} 
             meetingId={meetingId} 
-            image="./images/meet1.jpeg"  
+            image= {imageLinks[Math.floor(Math.random() * 6)] }
             meetingName="Capstone Catchup" 
             link={'/meetingsdetails'}  
             meetingTimestamp={meetingDetails.timestamp}  
