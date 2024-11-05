@@ -118,7 +118,7 @@ const MoodSurvey = () => {
   };
 
  
-  const fetchPreviousSurveys = async () => {
+  /*const fetchPreviousSurveys = async () => {
     if (user && startDate && endDate) {
       const surveysCollectionRef = collection(db, "users", user.uid, "moodSurveys");
   
@@ -143,7 +143,64 @@ const MoodSurvey = () => {
       setPreviousSurveys(surveys);
       navigate('/survey-history', { state: { surveys } }); // Navigate to SurveyHistory page with surveys data
     }
+  };*/
+  /*const fetchPreviousSurveys = async () => {
+    if (user && startDate && endDate) {
+      const surveysCollectionRef = collection(db, "users", user.uid, "moodSurveys");
+  
+      // Define start and end of the day for the search dates in UTC
+      const start = new Date(startDate);
+      start.setUTCHours(0, 0, 0, 0); // Midnight UTC of startDate
+      const end = new Date(endDate);
+      end.setUTCHours(23, 59, 59, 999); // End of the day UTC of endDate
+  
+      // Query to fetch surveys with timestamp within the specified UTC range
+      const q = query(
+        surveysCollectionRef,
+        where("timestamp", ">", start),
+        where("timestamp", "<=", end)
+      );
+  
+      const querySnapshot = await getDocs(q);
+      const surveys = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setPreviousSurveys(surveys);
+      navigate('/survey-history', { state: { surveys } }); // Navigate to SurveyHistory page with surveys data
+    }
+  };*/
+  const fetchPreviousSurveys = async () => {
+    if (user && startDate && endDate) {
+      const surveysCollectionRef = collection(db, "users", user.uid, "moodSurveys");
+  
+      // Convert startDate to the start of the day UTC
+      const start = new Date(startDate);
+      start.setUTCHours(0, 0, 0, 0); // Midnight UTC of startDate
+  
+      // Convert endDate to the end of the day UTC
+      const end = new Date(endDate);
+      end.setUTCHours(23, 59, 59, 999); // End of the day UTC of endDate
+  
+      // Query for surveys within the specified range
+      const q = query(
+        surveysCollectionRef,
+        where("timestamp", ">=", start),
+        where("timestamp", "<=", end)
+      );
+  
+      const querySnapshot = await getDocs(q);
+      const surveys = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+  
+      setPreviousSurveys(surveys);
+      navigate('/survey-history', { state: { surveys } });
+    }
   };
+  
+  
 
   useEffect(() => {
     if (backgroundColor) {
