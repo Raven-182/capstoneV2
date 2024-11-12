@@ -151,17 +151,20 @@ export default function Journal() {
                                             {entry.type === "audio" && (
                                                 <>
                                                     <audio controls className="entry-audio-left">
-                                                        <source src={entry.content} type="audio/mpeg" />
+                                                        {/* Convert the base64 string to a Data URL */}
+                                                        <source src={`data:audio/mpeg;base64,${entry.content}`} type="audio/mpeg" />
                                                         Your browser does not support the audio tag.
                                                     </audio>
 
-                                                    <a href={entry.content} download={`${entry.title}.mp3`}>
+                                                    {/* Create a downloadable link with the base64 Data URL */}
+                                                    <a href={`data:audio/mpeg;base64,${entry.content}`} download={`${entry.title}.mp3`}>
                                                         <button className="entry_download">
                                                             <i className="fa-solid fa-download"></i>
                                                         </button>
                                                     </a>
                                                 </>
                                             )}
+
 
                                             &nbsp;&nbsp;&nbsp;&nbsp;
 

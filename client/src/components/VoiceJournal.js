@@ -5,6 +5,7 @@ const VoiceJournal = ({ onSubmit, onRecordingStart, onRecordingStop }) => {
     const [audioUrl, setAudioUrl] = useState(null);
     const [title, setTitle] = useState("");
     const mediaRecorderRef = useRef(null);
+    const [audioFile, setAudioFile] = useState(null);
 
     const startRecording = () => {
         if (title) {
@@ -17,6 +18,7 @@ const VoiceJournal = ({ onSubmit, onRecordingStart, onRecordingStop }) => {
                         const audioBlob = new Blob([e.data], { type: 'audio/mpeg' });
                         const url = URL.createObjectURL(audioBlob);
                         setAudioUrl(url);
+                        setAudioFile(audioBlob); // Save the audio file for uploading
                     };
                     mediaRecorderRef.current.start();
                 })
@@ -32,13 +34,25 @@ const VoiceJournal = ({ onSubmit, onRecordingStart, onRecordingStop }) => {
         onRecordingStop(); // Notify parent that recording has stopped
     };
 
-    const handleSave = () => {
-        if (audioUrl && title) {
-            onSubmit(audioUrl, title);
-            setTitle("");
-            setAudioUrl(null);
+    const handleSave = async () => {
+        if (audioFile && title) {
+            // Convert audioFile (blob) to base64
+            const reader = new FileReader();
+            
+            reader.onloadend = async () => {
+                const base64Audio = reader.result.split(',')[1]; // Extract base64 content
+    
+    
+                setTitle("");
+                setAudioUrl(null);
+                setAudioFile(null); // Reset the file after saving
+                onSubmit(base64Audio, title); // Notify parent about the submission
+            };
+    
+            reader.readAsDataURL(audioFile); // Convert blob to base64
         }
     };
+    
 
     return (
         <div>
